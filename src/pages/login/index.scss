@@ -1,0 +1,234 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 40rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.login-header {
+  position: relative;
+  z-index: 1;
+  margin-top: 120rpx;
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.logo-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20rpx;
+}
+
+.logo {
+  font-size: 140rpx;
+  color: #EA4C73;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 8rpx 24rpx rgba(234, 76, 115, 0.3);
+}
+
+.logo-decoration {
+  position: absolute;
+  top: -20rpx;
+  right: -60rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.decoration-star {
+  font-size: 20rpx;
+  color: #FFD93D;
+  transform: rotate(-30deg);
+}
+
+.title {
+  font-size: 56rpx;
+  color: #2B1D23;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.slogan {
+  font-size: 24rpx;
+  color: #8B6B73;
+  display: block;
+}
+
+.login-card {
+  position: relative;
+  z-index: 1;
+  background-color: #FFFFFF;
+  border-radius: 48rpx;
+  padding: 48rpx 40rpx;
+  width: 100%;
+  max-width: 680rpx;
+  box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.08);
+}
+
+.input-group {
+  margin-bottom: 24rpx;
+}
+
+.input-wrap {
+  display: flex;
+  align-items: center;
+  background-color: #F8F9FA;
+  border-radius: 32rpx;
+  padding: 0 28rpx;
+  min-height: 100rpx;
+}
+
+.input-icon {
+  width: 64rpx;
+  height: 64rpx;
+  background-color: #FFF2F6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+}
+
+.icon-text {
+  font-size: 32rpx;
+}
+
+.input-field {
+  flex: 1;
+  font-size: 30rpx;
+  color: #2B1D23;
+}
+
+.input-placeholder {
+  color: #C4C4C4;
+}
+
+.input-toggle {
+  font-size: 36rpx;
+  padding: 16rpx;
+}
+
+.login-btn {
+  width: 100%;
+  height: 100rpx;
+  background: linear-gradient(135deg, #EA4C73 0%, #FF6B8A 100%);
+  border-radius: 32rpx;
+  color: #FFFFFF;
+  font-size: 34rpx;
+  font-weight: 700;
+  margin-top: 32rpx;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(234, 76, 115, 0.4);
+}
+
+.btn-text {
+  flex: 1;
+  text-align: center;
+}
+
+.btn-arrow {
+  font-size: 36rpx;
+  margin-right: 20rpx;
+}
+
+.other-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40rpx;
+  gap: 24rpx;
+}
+
+.divider {
+  flex: 1;
+  height: 2rpx;
+  background-color: #E8E8E8;
+}
+
+.divider-text {
+  font-size: 24rpx;
+  color: #999999;
+  white-space: nowrap;
+}
+
+.social-login {
+  display: flex;
+  justify-content: center;
+  gap: 48rpx;
+  margin-top: 40rpx;
+}
+
+.social-btn {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-btn.wechat {
+  background-color: #E3F5E9;
+}
+
+.social-btn.phone {
+  background-color: #E3F2FD;
+}
+
+.social-btn.email {
+  background-color: #FFF3E0;
+}
+
+.social-icon {
+  font-size: 44rpx;
+}
+
+.register-link {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 48rpx;
+  gap: 8rpx;
+  background-color: #FFFFFF;
+  padding: 20rpx 40rpx;
+  border-radius: 40rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+.register-text {
+  font-size: 26rpx;
+  color: #666666;
+}
+
+.register-btn {
+  font-size: 26rpx;
+  color: #EA4C73;
+  font-weight: 600;
+}
+
+.arrow {
+  font-size: 24rpx;
+  color: #EA4C73;
+}

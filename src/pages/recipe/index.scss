@@ -1,0 +1,596 @@
+.recipe-container {
+  min-height: 100vh;
+  background-color: #FCEFF5;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 88rpx 32rpx 24rpx;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #2B1D23;
+}
+
+.add-btn {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid #F3C8D1;
+}
+
+.add-btn-text {
+  font-size: 48rpx;
+  color: #EA4C73;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #2B1D23;
+  padding: 0 32rpx 24rpx;
+  flex-shrink: 0;
+}
+
+.list {
+  flex: 1;
+  padding: 0 32rpx 120rpx;
+  overflow-y: auto;
+  box-sizing: border-box; 
+}
+
+.empty-wrap {
+  margin-top: 160rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-icon {
+  font-size: 88rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #8B6B73;
+  font-weight: 600;
+  margin-top: 24rpx;
+}
+
+// 卡片样式
+.card {
+  background-color: #FFFFFF;
+  border-radius: 28rpx;
+  padding: 20rpx;
+  display: flex;
+  flex-direction: row;
+  border: 2rpx solid #F1D8DE;
+  margin-bottom: 20rpx;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.card-image {
+  width: 172rpx;
+  height: 172rpx;
+  border-radius: 20rpx;
+  background-color: #F8F8F8;
+  flex-shrink: 0;
+  margin-right: 20rpx;
+}
+
+.card-right {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8rpx 0;
+  overflow: hidden;
+}
+
+.card-name {
+  font-size: 32rpx;
+  color: #2B1D23;
+  font-weight: 700;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-desc {
+  font-size: 26rpx;
+  color: #6F6F6F;
+  line-height: 1.4;
+  margin-top: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+.card-price {
+  font-size: 32rpx;
+  color: #EA4C73;
+  font-weight: 700;
+  margin-top: 12rpx;
+}
+
+// 详情弹窗
+.detail-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #FCEFF5;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.detail-header {
+  padding: 88rpx 24rpx 16rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.back-btn {
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-btn-text {
+  font-size: 48rpx;
+  color: #EA4C73;
+  font-weight: 300;
+}
+
+.detail-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #2B1D23;
+}
+
+.save-top-btn {
+  min-width: 104rpx;
+  height: 68rpx;
+  border-radius: 34rpx;
+  background-color: #EA4C73;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24rpx;
+}
+
+.save-top-text {
+  color: #FFFFFF;
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.detail-scroll {
+  flex: 1;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  height: 0;
+}
+
+.detail-content {
+  padding: 0 32rpx 48rpx;
+}
+
+// 图片上传区域
+.image-box {
+  width: 100%;
+  height: 380rpx;
+  border-radius: 28rpx;
+  overflow: hidden;
+  background-color: #EFEFEF;
+  position: relative;
+}
+
+.detail-image {
+  width: 100%;
+  height: 100%;
+}
+
+.upload-text {
+  position: absolute;
+  right: 20rpx;
+  bottom: 20rpx;
+  font-size: 24rpx;
+  color: #FFFFFF;
+  background-color: rgba(0, 0, 0, 0.45);
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+// 菜名和AI生成
+.name-row {
+  display: flex;
+  align-items: center;
+  margin-top: 20rpx;
+  gap: 20rpx;
+}
+
+.name-input {
+  flex: 1;
+  background-color: #FFFFFF;
+  border-radius: 24rpx;
+  border: 2rpx solid #F1D8DE;
+  padding-left:24rpx;
+  color: #2B1D23;
+  font-size: 34rpx;
+  font-weight: 700;
+  height: 88rpx;
+  box-sizing: border-box;
+  line-height: 48rpx;
+}
+
+.ai-btn {
+  display: flex;
+  align-items: center;
+  background-color: #EA4C73;
+  padding: 20rpx 24rpx;
+  border-radius: 24rpx;
+  flex-shrink: 0;
+}
+
+.ai-btn-disabled {
+  background-color: #F1A8B8;
+}
+
+.ai-btn-text {
+  color: #FFFFFF;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+// 分组标题
+.group-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 28rpx;
+  margin-bottom: 16rpx;
+}
+
+.group-title {
+  font-size: 30rpx;
+  color: #2B1D23;
+  font-weight: 700;
+}
+
+.group-title-with-btn {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+// 大厨选择
+.chef-scroll {
+  white-space: nowrap;
+  margin-bottom: 24rpx;
+}
+
+.chef-tag {
+  display: inline-block;
+  padding: 20rpx 32rpx;
+  border-radius: 40rpx;
+  background-color: #F5F5F5;
+  margin-right: 20rpx;
+  border: 2rpx solid #E0E0E0;
+}
+
+.chef-tag-active {
+  background-color: #D9465F;
+  border-color: #D9465F;
+}
+
+.chef-tag-text {
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.chef-tag-text-active {
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+// 分类选择
+.category-scroll {
+  white-space: nowrap;
+  margin-bottom: 16rpx;
+}
+
+.category-tag {
+  display: inline-block;
+  padding: 16rpx 32rpx;
+  border-radius: 32rpx;
+  background-color: #FFF0F3;
+  margin-right: 16rpx;
+  border: 2rpx solid #FFD1D9;
+}
+
+.category-tag-active {
+  background-color: #EA4C73;
+  border-color: #EA4C73;
+}
+
+.category-tag-text {
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.category-tag-text-active {
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.category-display {
+  padding: 20rpx 32rpx;
+  background-color: #FFF0F3;
+  border-radius: 20rpx;
+  display: inline-block;
+}
+
+.category-display-text {
+  font-size: 28rpx;
+  color: #EA4C73;
+  font-weight: 600;
+}
+
+.custom-category-input {
+  margin-top: 16rpx;
+}
+
+// 输入框样式
+.input {
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  border: 2rpx solid #F1D8DE;
+  padding: 20rpx 24rpx;
+  color: #2B1D23;
+  font-size: 28rpx;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 1.5;
+  height: auto;
+}
+
+.text-area {
+  min-height: 144rpx;
+  line-height: 44rpx;
+}
+
+// 行内输入
+.row-input {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.row-left {
+  flex: 1;
+}
+
+.row-right {
+  width: 220rpx;
+}
+
+.row-input-with-delete {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+  align-items: center;
+}
+
+.ingredient-name-input {
+  flex: 1;
+  min-width: 0;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  border: 2rpx solid #F1D8DE;
+  padding: 20rpx 24rpx;
+  color: #2B1D23;
+  font-size: 28rpx;
+  box-sizing: border-box;
+  line-height: 1.5;
+  height: auto;
+}
+
+.ingredient-amount-input {
+  width: 160rpx;
+  flex-shrink: 0;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  border: 2rpx solid #F1D8DE;
+  padding: 20rpx 24rpx;
+  color: #2B1D23;
+  font-size: 28rpx;
+  box-sizing: border-box;
+  line-height: 1.5;
+  height: auto;
+}
+
+.delete-btn {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 28rpx;
+  background-color: #EA4C73;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.delete-btn-text {
+  color: #FFFFFF;
+  font-size: 40rpx;
+  font-weight: 700;
+  line-height: 1;
+}
+
+// 幽灵按钮
+.ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 12rpx 20rpx;
+  border-radius: 24rpx;
+  border: 2rpx solid #F1D8DE;
+  background-color: #FFFFFF;
+  margin-top: 0;
+}
+
+.ghost-btn-text {
+  color: #8B6B73;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+// 标题旁的添加按钮
+.title-add-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  border: 2rpx solid #EA4C73;
+  background-color: #FFFFFF;
+}
+
+.title-add-btn-text {
+  color: #EA4C73;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+// 步骤卡片
+.step-card {
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  border: 2rpx solid #F1D8DE;
+  padding: 20rpx;
+  margin-bottom: 16rpx;
+}
+
+.step-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.step-index {
+  color: #8B6B73;
+  font-weight: 700;
+  font-size: 28rpx;
+}
+
+.step-actions {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.step-upload-text {
+  color: #EA4C73;
+  font-weight: 600;
+  font-size: 24rpx;
+}
+
+.delete-step-btn {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 24rpx;
+  background-color: #EA4C73;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-step-btn-text {
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.step-image {
+  width: 100%;
+  height: 240rpx;
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.step-input {
+  min-height: 112rpx;
+  line-height: 44rpx;
+}
+
+// 底部操作按钮
+.bottom-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 36rpx;
+}
+
+.bottom-delete-btn {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 24rpx;
+  border: 2rpx solid #F1B8C4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFF5F8;
+}
+
+.bottom-delete-btn-text {
+  color: #D9465F;
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.save-btn {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #EA4C73;
+}
+
+.save-btn-text {
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 700;
+}
