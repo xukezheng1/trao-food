@@ -406,7 +406,7 @@ const RecipeScreen = () => {
       <View className="card-right">
         <Text className="card-name">{item.name}</Text>
         <Text className="card-desc">{item.description || '暂无描述'}</Text>
-        <Text className="card-price">￥ {item.price.toFixed(2)}</Text>
+        <Text className="card-price">¥ {item.price.toFixed(2)}</Text>
       </View>
     </View>
   )

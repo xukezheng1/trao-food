@@ -1,3 +1,5 @@
+const isH5 = process.env.TARO_ENV === 'h5'
+
 export default {
   pages: [
     'pages/order/index',
@@ -27,45 +29,52 @@ export default {
     navigationBarTextStyle: 'black',
     navigationBarTitleText: '美食生活',
     navigationBarBackgroundColor: '#FFF2F6',
-    backgroundColor: '#FFF2F6'
+    backgroundColor: '#FFF2F6',
   },
-  tabBar: {
-    custom: true,
-    color: '#8C8C8C',
-    selectedColor: '#E84D5B',
-    backgroundColor: '#FFFFFF',
-    borderStyle: 'white',
-    list: [
-      {
-        pagePath: 'pages/order/index',
-        text: '点餐',
-        iconPath: 'assets/dachu.png',
-        selectedIconPath: 'assets/dachu.png'
-      },
-      {
-        pagePath: 'pages/orders/index',
-        text: '订单',
-        iconPath: 'assets/dachu.png',
-        selectedIconPath: 'assets/dachu.png'
-      },
-      {
-        pagePath: 'pages/mall/index',
-        text: '商城',
-        iconPath: 'assets/manghe.png',
-        selectedIconPath: 'assets/manghe.png'
-      },
-      {
-        pagePath: 'pages/expense/index',
-        text: '记账',
-        iconPath: 'assets/jizhang.png',
-        selectedIconPath: 'assets/jizhang.png'
-      },
-      {
-        pagePath: 'pages/family/index',
-        text: '我的',
-        iconPath: 'assets/homeIcon.png',
-        selectedIconPath: 'assets/homeIcon.png'
-      }
-    ]
-  }
+  usingComponents: {},
+  subpackages: [],
+  entryPagePath: 'pages/order/index',
+  // H5 环境不配置 tabBar，使用自定义 TabBar 组件
+  // 小程序环境使用自定义 tabBar
+  ...(isH5 ? {} : {
+    tabBar: {
+      custom: true,
+      color: '#8C8C8C',
+      selectedColor: '#E84D5B',
+      backgroundColor: '#FFFFFF',
+      borderStyle: 'white',
+      list: [
+        {
+          pagePath: 'pages/order/index',
+          text: '点餐',
+          iconPath: 'assets/dachu.png',
+          selectedIconPath: 'assets/dachu.png'
+        },
+        {
+          pagePath: 'pages/orders/index',
+          text: '订单',
+          iconPath: 'assets/dachu.png',
+          selectedIconPath: 'assets/dachu.png'
+        },
+        {
+          pagePath: 'pages/mall/index',
+          text: '商城',
+          iconPath: 'assets/manghe.png',
+          selectedIconPath: 'assets/manghe.png'
+        },
+        {
+          pagePath: 'pages/expense/index',
+          text: '记账',
+          iconPath: 'assets/jizhang.png',
+          selectedIconPath: 'assets/jizhang.png'
+        },
+        {
+          pagePath: 'pages/family/index',
+          text: '我的',
+          iconPath: 'assets/homeIcon.png',
+          selectedIconPath: 'assets/homeIcon.png'
+        }
+      ]
+    }
+  })
 }

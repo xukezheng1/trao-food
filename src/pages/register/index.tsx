@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, Text, Input, Button } from '@tarojs/components'
+import { View, Text, Input, Button, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useUser } from '../../context/UserContext'
 import './index.scss'
@@ -65,7 +65,9 @@ const RegisterScreen = () => {
 
         <View className="input-group">
           <View className="input-wrap">
-            <Text className="input-icon">👤</Text>
+            <View className="input-icon">
+              <Image src={require('../../assets/account.png')} className="icon-image" mode="aspectFit" />
+            </View>
             <Input
               placeholder={T.username}
               value={username}
@@ -78,7 +80,9 @@ const RegisterScreen = () => {
 
         <View className="input-group">
           <View className="input-wrap">
-            <Text className="input-icon">🏷️</Text>
+            <View className="input-icon">
+              <Image src={require('../../assets/email.png')} className="icon-image" mode="aspectFit" />
+            </View>
             <Input
               placeholder={T.nickname}
               value={nickname}
@@ -91,7 +95,9 @@ const RegisterScreen = () => {
 
         <View className="input-group">
           <View className="input-wrap">
-            <Text className="input-icon">🔒</Text>
+            <View className="input-icon">
+              <Image src={require('../../assets/password.png')} className="icon-image" mode="aspectFit" />
+            </View>
             <Input
               placeholder={T.password}
               value={password}
@@ -105,7 +111,9 @@ const RegisterScreen = () => {
 
         <View className="input-group">
           <View className="input-wrap">
-            <Text className="input-icon">🔑</Text>
+            <View className="input-icon">
+              <Image src={require('../../assets/password.png')} className="icon-image" mode="aspectFit" />
+            </View>
             <Input
               placeholder={T.confirmPwd}
               value={confirmPwd}

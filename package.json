@@ -15,11 +15,13 @@
     "@tarojs/shared": "^3.6.23",
     "@tarojs/taro": "3.6.23",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "taro-icons": "^0.4.0"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.28.5",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.6.2",
     "@tarojs/cli": "3.6.23",
     "@tarojs/plugin-framework-react": "3.6.23",
     "@tarojs/plugin-platform-h5": "3.6.23",

@@ -1,4 +1,4 @@
-.login-container {
+.auth-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -17,10 +17,10 @@
   z-index: 0;
 }
 
-.login-header {
+.auth-header {
   position: relative;
   z-index: 1;
-  margin-top: 120rpx;
+  margin-top: 250rpx;
   text-align: center;
   margin-bottom: 40rpx;
 }
@@ -68,19 +68,67 @@
   display: block;
 }
 
-.login-card {
+/* 卡片容器 */
+.cards-container {
   position: relative;
   z-index: 1;
-  background-color: #FFFFFF;
-  border-radius: 48rpx;
-  padding: 48rpx 40rpx;
   width: 100%;
   max-width: 680rpx;
+  height: 900rpx;
+  perspective: 1000rpx;
+}
+
+/* 认证卡片 */
+.auth-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #FFFFFF;
+  border-radius: 48rpx;
+  padding: 40rpx;
   box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  backface-visibility: hidden;
+}
+
+/* 登录卡片 */
+.login-card {
+  transform: translateX(0) rotateY(0deg);
+  opacity: 1;
+  box-sizing: border-box;
+}
+
+.login-card.inactive {
+  transform: translateX(-120%) rotateY(-15deg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 注册卡片 */
+.register-card {
+  transform: translateX(120%) rotateY(15deg);
+  opacity: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.register-card.active {
+  transform: translateX(0) rotateY(0deg);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.card-title {
+  font-size: 48rpx;
+  color: #2B1D23;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 32rpx;
 }
 
 .input-group {
-  margin-bottom: 24rpx;
+  margin-bottom: 20rpx;
 }
 
 .input-wrap {
@@ -88,23 +136,25 @@
   align-items: center;
   background-color: #F8F9FA;
   border-radius: 32rpx;
-  padding: 0 28rpx;
-  min-height: 100rpx;
+  padding: 0 24rpx;
+  min-height: 96rpx;
 }
 
 .input-icon {
-  width: 64rpx;
-  height: 64rpx;
+  width: 56rpx;
+  height: 56rpx;
   background-color: #FFF2F6;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 20rpx;
+  flex-shrink: 0;
 }
 
-.icon-text {
-  font-size: 32rpx;
+.icon-image {
+  width: 32rpx;
+  height: 32rpx;
 }
 
 .input-field {
@@ -118,13 +168,20 @@
 }
 
 .input-toggle {
-  font-size: 36rpx;
   padding: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.login-btn {
+.eye-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.submit-btn {
   width: 100%;
-  height: 100rpx;
+  height: 96rpx;
   background: linear-gradient(135deg, #EA4C73 0%, #FF6B8A 100%);
   border-radius: 32rpx;
   color: #FFFFFF;
@@ -153,7 +210,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 40rpx;
+  margin-top: 32rpx;
   gap: 24rpx;
 }
 
@@ -172,13 +229,13 @@
 .social-login {
   display: flex;
   justify-content: center;
-  gap: 48rpx;
-  margin-top: 40rpx;
+  gap: 40rpx;
+  margin-top: 32rpx;
 }
 
 .social-btn {
-  width: 100rpx;
-  height: 100rpx;
+  width: 88rpx;
+  height: 88rpx;
   border-radius: 50%;
   border: none;
   padding: 0;
@@ -199,30 +256,62 @@
   background-color: #FFF3E0;
 }
 
-.social-icon {
-  font-size: 44rpx;
+.social-icon-image {
+  width: 44rpx;
+  height: 44rpx;
 }
 
-.register-link {
-  position: relative;
-  z-index: 1;
+/* 角色选择 */
+.role-group {
+  margin-top: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.role-label {
+  font-size: 26rpx;
+  color: #666666;
+  margin-bottom: 16rpx;
+  display: block;
+  text-align: center;
+}
+
+.role-options {
+  display: flex;
+  gap: 24rpx;
+}
+
+.role-btn {
+  flex: 1;
+  height: 72rpx;
+  background-color: #F5F6F8;
+  border-radius: 20rpx;
+  color: #8B6B73;
+  font-size: 28rpx;
+  border: 2rpx solid transparent;
+  padding: 0;
+}
+
+.role-btn.active {
+  background-color: #FFF2F6;
+  color: #EA4C73;
+  border-color: #EA4C73;
+}
+
+/* 切换链接 */
+.switch-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 48rpx;
+  margin-top: 32rpx;
   gap: 8rpx;
-  background-color: #FFFFFF;
-  padding: 20rpx 40rpx;
-  border-radius: 40rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
 }
 
-.register-text {
+.switch-text {
   font-size: 26rpx;
   color: #666666;
 }
 
-.register-btn {
+.switch-btn {
   font-size: 26rpx;
   color: #EA4C73;
   font-weight: 600;

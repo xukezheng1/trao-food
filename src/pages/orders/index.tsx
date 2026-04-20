@@ -55,25 +55,29 @@ const statusColors: Record<OrderStatus, string> = {
   foodie_complete: '#909399'
 }
 
-const toOrder = (item: any): OrderItem => {
+const toOrder = (item: any, isChefView: boolean): OrderItem => {
   // 处理API返回的数据结构
-  // foodie字段包含食客信息（对于大厨视角的订单）
-  const foodieInfo = item?.foodie || {}
   // items中的每个元素有dish对象
   const orderItems = (item?.items ?? []).map((d: any) => ({
     dish_id: asNumber(d?.dish?.id ?? d?.dish_id ?? 0),
-    name: String(d?.dish?.name ?? '未知菜品'),
+    name: String(d?.dish_name ?? d?.dish?.name ?? '未知菜品'),
     price: asNumber(d?.price ?? d?.dish?.price ?? 0),
     quantity: asNumber(d?.quantity ?? 1)
   }))
 
+  // 根据视角确定显示谁的信息
+  // 大厨视角：显示食客信息（foodie字段）
+  // 吃货视角：显示大厨信息（chef字段）
+  const personInfo = isChefView 
+    ? (item?.foodie || {})
+    : (item?.chef || { name: item?.chef_name, avatar: item?.chef_avatar })
+
   return {
     id: asNumber(item?.id, 0),
     order_no: String(item?.order_no ?? `ORD${item?.id ?? Date.now()}`),
-    // 对于大厨视角，显示食客名称
-    chef_name: String(foodieInfo?.nickname ?? foodieInfo?.username ?? '未知用户'),
-    chef_id: asNumber(foodieInfo?.id, 0),
-    chef_avatar: foodieInfo?.avatar,
+    chef_name: String(personInfo?.nickname ?? personInfo?.username ?? personInfo?.name ?? '未知用户'),
+    chef_id: asNumber(personInfo?.id, 0),
+    chef_avatar: personInfo?.avatar,
     total_price: asNumber(item?.total_amount ?? item?.total_price ?? 0),
     status: (item?.status ?? 'pending') as OrderStatus,
     created_at: String(item?.created_at ?? new Date().toLocaleString()),
@@ -95,7 +99,7 @@ const OrdersTabScreen = () => {
       const result = isChef
         ? await api.order.chefOrders(params)
         : await api.order.myOrders(params)
-      const list = pickList(result, ['orders', 'data']).map(toOrder)
+      const list = pickList(result, ['orders', 'data']).map((item: any) => toOrder(item, isChef))
       setOrders(list)
     } catch (err) {
       console.error('Load orders error:', err)

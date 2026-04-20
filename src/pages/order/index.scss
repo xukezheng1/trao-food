@@ -1,12 +1,14 @@
 .order-container {
   min-height: 100vh;
-  background-color: #FFF2F6;
+  background: linear-gradient(180deg, #FFE4EC 0%, #FFF5F7 100%);
+  padding-bottom: 120rpx;
 }
 
+/* 顶部搜索栏 */
 .header {
   display: flex;
   align-items: center;
-  padding:32rpx 20rpx;
+  padding: 20rpx 32rpx;
   gap: 20rpx;
 }
 
@@ -15,18 +17,18 @@
   display: flex;
   align-items: center;
   background-color: #FFFFFF;
-  border-radius: 36rpx;
-  padding: 16rpx 28rpx;
-  border: 2rpx solid #F3C8D1;
+  border-radius: 40rpx;
+  padding: 16rpx 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
 }
 
 .search-icon {
-  font-size: 36rpx;
+  font-size: 32rpx;
+  margin-right: 12rpx;
 }
 
 .search-input {
   flex: 1;
-  margin-left: 16rpx;
   font-size: 28rpx;
   color: #333333;
   border: none;
@@ -35,7 +37,7 @@
 }
 
 .search-input::placeholder {
-  color: #8B8F9B;
+  color: #999999;
 }
 
 .cart-icon-btn {
@@ -46,135 +48,170 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #FFFFFF;
-  border: 2rpx solid #F3C8D1;
+  background: linear-gradient(135deg, #FF6B8A 0%, #FF8FA8 100%);
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 138, 0.3);
 }
 
 .cart-icon {
-  font-size: 44rpx;
+  font-size: 40rpx;
 }
 
 .badge {
   position: absolute;
-  top: 4rpx;
-  right: 4rpx;
-  background-color: #D9465F;
+  top: -4rpx;
+  right: -4rpx;
+  background-color: #FFFFFF;
   border-radius: 20rpx;
   min-width: 36rpx;
   height: 36rpx;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 2rpx solid #FF6B8A;
 }
 
 .badge-text {
-  color: #FFFFFF;
+  color: #FF6B8A;
   font-size: 22rpx;
   font-weight: 700;
   padding: 0 8rpx;
 }
 
-.scroll-content {
-  flex: 1;
-}
-
+/* 盲盒区域 */
 .blind-box-section {
   padding: 16rpx 32rpx 32rpx;
 }
 
 .blind-box-card {
   display: flex;
-  align-items: center;
-  background-color: #FFE4EC;
+  background: linear-gradient(135deg, #FFE4EC 0%, #FFD4E0 100%);
   border-radius: 32rpx;
   padding: 32rpx;
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 138, 0.15);
 }
 
 .blind-box-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-right: 32rpx;
 }
 
-.blind-box-machine {
-  width: 160rpx;
-  height: 160rpx;
-  background-color: #FFFFFF;
-  border-radius: 24rpx;
+.blind-box-title-large {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.blind-box-title-text {
+  font-size: 56rpx;
+  font-weight: 800;
+  color: #2B1D23;
+  font-style: italic;
+}
+
+.sparkle-icon {
+  font-size: 32rpx;
+  margin-left: 8rpx;
+}
+
+.gift-box {
+  position: relative;
+  width: 140rpx;
+  height: 140rpx;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .gift-icon {
-  font-size: 96rpx;
+  font-size: 100rpx;
+}
+
+.question-mark {
+  position: absolute;
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #FF6B8A;
 }
 
 .blind-box-right {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.blind-box-title {
+.blind-box-sub {
   font-size: 36rpx;
   font-weight: 700;
   color: #2B1D23;
   margin-bottom: 8rpx;
 }
 
-.blind-box-sub {
-  font-size: 28rpx;
-  color: #D9465F;
+.blind-box-tip {
+  font-size: 26rpx;
+  color: #666666;
   margin-bottom: 4rpx;
 }
 
-.blind-box-tip {
+.blind-box-tip2 {
   font-size: 24rpx;
-  color: #8B6B73;
+  color: #999999;
   margin-bottom: 24rpx;
 }
 
 .draw-btn {
-  display: inline-block;
-  background-color: #D9465F;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #FF6B8A 0%, #FF8FA8 100%);
   border-radius: 40rpx;
   padding: 20rpx 48rpx;
+  align-self: flex-start;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 138, 0.3);
 }
 
 .draw-btn-text {
   color: #FFFFFF;
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 700;
 }
 
-.chefs-list {
-  padding: 0 32rpx 48rpx;
-  display: flex;
-  flex-direction: column;
-  gap: 24rpx;
+.finger-icon {
+  font-size: 28rpx;
+  margin-left: 8rpx;
+}
+
+/* 大厨列表区域 */
+.chefs-section {
+  padding: 0 32rpx 32rpx;
 }
 
 .chef-card {
-  display: flex;
   background-color: #FFFFFF;
   border-radius: 32rpx;
   padding: 24rpx;
-  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.05);
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
 }
 
-.chef-info-section {
-  flex: 1;
-  padding-right: 24rpx;
-  border-right: 2rpx solid #F0F0F0;
+.chef-main {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20rpx;
 }
 
 .chef-header {
   display: flex;
   align-items: center;
-  margin-bottom: 16rpx;
+  flex: 1;
 }
 
 .chef-avatar {
-  width: 96rpx;
-  height: 96rpx;
-  border-radius: 48rpx;
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 44rpx;
   background-color: #FCEFF5;
 }
 
@@ -188,7 +225,7 @@
   font-size: 48rpx;
 }
 
-.chef-name-section {
+.chef-info {
   margin-left: 20rpx;
   flex: 1;
 }
@@ -197,16 +234,16 @@
   font-size: 32rpx;
   font-weight: 700;
   color: #2B1D23;
+  margin-bottom: 8rpx;
 }
 
 .rating-row {
   display: flex;
   align-items: center;
-  margin-top: 4rpx;
 }
 
 .star-icon {
-  font-size: 28rpx;
+  font-size: 24rpx;
 }
 
 .rating-text {
@@ -216,110 +253,190 @@
   margin-left: 4rpx;
 }
 
+.dot {
+  font-size: 24rpx;
+  color: #CCCCCC;
+  margin: 0 8rpx;
+}
+
 .dish-count {
   font-size: 24rpx;
-  color: #8B6B73;
-  margin-left: 12rpx;
+  color: #666666;
 }
 
 .specialty-text {
   font-size: 24rpx;
-  color: #8B6B73;
-  line-height: 36rpx;
-  margin-bottom: 20rpx;
+  color: #999999;
+  margin-top: 8rpx;
+  margin-left: 108rpx;
 }
 
 .enter-btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   background-color: #FFF2F6;
-  padding: 12rpx 24rpx;
-  border-radius: 24rpx;
+  padding: 12rpx 20rpx;
+  border-radius: 28rpx;
+  margin-left: auto;
 }
 
 .enter-btn-text {
-  font-size: 26rpx;
-  color: #D9465F;
+  font-size: 24rpx;
+  color: #FF6B8A;
   font-weight: 600;
-  margin-right: 4rpx;
 }
 
 .arrow-icon {
-  font-size: 32rpx;
-  color: #D9465F;
+  font-size: 28rpx;
+  color: #FF6B8A;
+  margin-left: 4rpx;
 }
 
-.dishes-section {
-  width: 280rpx;
-  padding-left: 24rpx;
+/* 常点菜品区域 */
+.top-dishes-section {
+  border-top: 2rpx solid #F5F5F5;
+  padding-top: 20rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.section-icon {
+  font-size: 28rpx;
+  margin-right: 8rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2B1D23;
+  flex: 1;
+}
+
+.view-all {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+.dishes-list {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 20rpx;
 }
 
-.top-dish-card {
-  background-color: #FFF8FA;
+.dish-item {
+  display: flex;
+  background-color: #FAFAFA;
   border-radius: 20rpx;
   padding: 16rpx;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
-.top-dish-card-margin {
-  margin-top: 16rpx;
-}
-
-.top-dish-image-placeholder {
+.dish-image-wrapper {
   width: 140rpx;
   height: 140rpx;
-  background-color: #FCEFF5;
   border-radius: 16rpx;
+  overflow: hidden;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.dish-image {
+  width: 100%;
+  height: 100%;
+}
+
+.dish-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #F0F0F0;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.dish-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dish-name-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.dish-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2B1D23;
+}
+
+.recommend-tag {
+  font-size: 20rpx;
+  color: #FF6B8A;
+  background-color: #FFE4EC;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  margin-left: 12rpx;
+}
+
+.dish-stats {
+  display: flex;
+  align-items: center;
   margin-bottom: 12rpx;
 }
 
-.top-dish-image {
-  width: 140rpx;
-  height: 140rpx;
-  border-radius: 16rpx;
+.dish-sales {
+  font-size: 22rpx;
+  color: #999999;
+  margin-right: 20rpx;
 }
 
-.dish-icon {
-  font-size: 56rpx;
+.dish-rating {
+  font-size: 22rpx;
+  color: #999999;
 }
 
-.top-dish-name {
-  font-size: 24rpx;
-  color: #2B1D23;
-  font-weight: 500;
+.dish-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dish-price {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #FF6B8A;
+}
+
+.add-btn {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(135deg, #FF6B8A 0%, #FF8FA8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 138, 0.3);
+}
+
+.add-icon {
+  color: #FFFFFF;
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.no-dishes {
+  padding: 40rpx;
   text-align: center;
 }
 
-.top-dish-price {
-  font-size: 24rpx;
-  color: #D9465F;
-  font-weight: 700;
-  margin-top: 4rpx;
-}
-
-.no-dishes-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40rpx;
-}
-
-.no-dishes-icon {
-  font-size: 64rpx;
-  opacity: 0.5;
-}
-
 .no-dishes-text {
-  font-size: 24rpx;
-  color: #ccc;
-  margin-top: 16rpx;
+  font-size: 26rpx;
+  color: #999999;
 }

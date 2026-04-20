@@ -13,7 +13,7 @@ const T = {
   openBox: '立即开启',
   systemRecommend: '今日推荐菜品',
   chefRecommend: '大厨推荐菜品',
-  order: '去组单',
+  order: '去订单列表',
   ticket: '饭票',
   loading: '正在加载推荐...',
   noDishes: '暂无菜品'
@@ -37,7 +37,7 @@ interface SystemDish {
 
 const toChef = (item: any, index: number): HomeChef => ({
   id: asNumber(item?.id ?? item?.chef_id, index + 1),
-  name: String(item?.name ?? item?.nickname ?? item?.username ?? `大厨${index + 1}`),
+  name: String(item?.name ?? item?.nickname ?? item?.username ?? `未知大厨${index + 1}`),
   rating: asNumber(item?.rating ?? item?.score, 5.0),
   specialty: String(item?.specialty ?? item?.description ?? '家常菜'),
   dish: String((item?.dishes?.[0] ?? item?.dish ?? {})?.name ?? item?.dish_name ?? '暂无菜品'),

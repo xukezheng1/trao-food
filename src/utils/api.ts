@@ -1,7 +1,7 @@
-﻿﻿﻿﻿import Taro from '@tarojs/taro'
+﻿import Taro from '@tarojs/taro'
 import { storage } from './storage'
 
-export const BASE_URL = 'http://192.168.1.4:3000/api'
+export const BASE_URL = 'http://localhost:3000/api'
 
 interface ResponseData<T = any> {
   success: boolean

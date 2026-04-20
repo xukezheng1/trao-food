@@ -226,9 +226,8 @@ const RecipeDetailScreen = () => {
           </View>
 
           <Text className="price">¥{Number(dish.price || 0).toFixed(2)}</Text>
-
           <Text className="section-title">{T.description}</Text>
-          <Text className="description">{dish.description || '暂无菜品描述。'}</Text>
+          <Text className="description">{dish.description || '未知菜品描述。'}</Text>
 
           {!!dish.chefName && (
             <Text className="chef-text">{T.fromChef}：{dish.chefName}</Text>

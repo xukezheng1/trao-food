@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback } from 'react'
+﻿﻿import { useState, useEffect, useCallback } from 'react'
 import { View, Text, ScrollView, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import api from '../../utils/api'
@@ -9,13 +9,18 @@ import CustomTabBar from '../../components/tabBar'
 import './index.scss'
 
 const T = {
-  search: '鎼滅储鑿滃搧',
-  blindBoxTitle: '鑿滃搧鐩茬洅',
-  blindBoxSub: '鑺?30 鍏冩娊閬撴儕鍠滅編椋?,
-  blindBoxTip: '姣忔鎶藉彇 1 浠介殢鏈鸿彍鍝?,
-  draw: '鎶戒竴涓?,
-  enter: '杩涘叆鐐归',
-  noDishes: '鏆傛棤鑿滃搧'
+  search: '搜索菜品、商家',
+  blindBoxTitle: '盲盒',
+  blindBoxSub: '菜品盲盒',
+  blindBoxTip: '花 30 元抽惊喜美食',
+  blindBoxTip2: '每次抽取 1 份随机菜品',
+  draw: '抽一个',
+  enter: '进入点餐',
+  noDishes: '暂无菜品',
+  topDishes: '常点菜品',
+  viewAll: '查看全部',
+  monthSales: '月售',
+  rating: '好评率'
 }
 
 interface Dish {
@@ -24,6 +29,7 @@ interface Dish {
   price: number
   image?: string
   order_count?: number
+  rating?: number
 }
 
 interface Chef {
@@ -40,21 +46,22 @@ interface Chef {
 
 const toDish = (item: any): Dish => ({
   id: asNumber(item?.id, 0),
-  name: String(item?.name ?? '鏈煡鑿滃搧'),
+  name: String(item?.name ?? '未知菜品'),
   price: asNumber(item?.price, 0),
   image: item?.image,
-  order_count: asNumber(item?.order_count ?? item?.orderCount, 0)
+  order_count: asNumber(item?.order_count ?? item?.orderCount, 0),
+  rating: asNumber(item?.rating ?? 98, 0)
 })
 
 const toChef = (item: any): Chef => ({
-  id: asNumber(item?.id ?? item?.chef_id, 0),
-  name: String(item?.nickname ?? item?.username ?? `鍘ㄥ笀${item?.id}`),
+  id: asNumber(item?.id, 0),
+  name: String(item?.nickname ?? item?.username ?? '未知大厨'),
   nickname: item?.nickname,
   username: String(item?.username ?? ''),
-  rating: asNumber(item?.rating ?? item?.score, 5.0),
-  specialty: String(item?.specialty ?? item?.description ?? '瀹跺父鑿?),
+  rating: asNumber(item?.rating ?? 5.0, 0),
+  specialty: String(item?.specialty ?? '未填专业'),
   avatar: item?.avatar,
-  dish_count: asNumber(item?.dish_count ?? item?.dishCount, 0),
+  dish_count: asNumber(item?.dish_count ?? item?.dishCount ?? 0, 0),
   top_dishes: []
 })
 
@@ -65,7 +72,8 @@ const OrderScreen = () => {
   const { totalCount } = useCart()
   const { isLogin, authReady } = useUser()
 
-  // 妫€鏌ョ櫥褰曠姸鎬?  useEffect(() => {
+  // 检查登录状态
+  useEffect(() => {
     if (authReady && !isLogin) {
       Taro.reLaunch({ url: '/pages/login/index' })
     }
@@ -109,7 +117,9 @@ const OrderScreen = () => {
   }
 
   const goToChefDetail = (chef: Chef) => {
-    Taro.navigateTo({ url: `/pages/chefDetail/index?chefId=${chef.id}&chefName=${encodeURIComponent(chef.name)}` })
+    Taro.navigateTo({
+      url: `/pages/chefDetail/index?chefId=${chef.id}&chefName=${encodeURIComponent(chef.name)}&chefAvatar=${encodeURIComponent(chef.avatar || '')}`
+    })
   }
 
   const filteredChefs = chefs.filter((chef) => {
@@ -120,9 +130,10 @@ const OrderScreen = () => {
 
   return (
     <View className="order-container">
+      {/* 顶部搜索栏 */}
       <View className="header">
         <View className="search-bar">
-          <Text className="search-icon">馃攳</Text>
+          <Text className="search-icon">🔍</Text>
           <input
             type="text"
             placeholder={T.search}
@@ -132,7 +143,7 @@ const OrderScreen = () => {
           />
         </View>
         <View className="cart-icon-btn">
-          <Text className="cart-icon">馃洅</Text>
+          <Text className="cart-icon">🛒</Text>
           {totalCount > 0 && (
             <View className="badge">
               <Text className="badge-text">{totalCount > 99 ? '99+' : totalCount}</Text>
@@ -142,73 +153,105 @@ const OrderScreen = () => {
       </View>
 
       <ScrollView className="scroll-content" scrollY>
+        {/* 盲盒区域 */}
         <View className="blind-box-section">
           <View className="blind-box-card" onClick={goToBlindBox}>
             <View className="blind-box-left">
-              <View className="blind-box-machine">
-                <Text className="gift-icon">馃巵</Text>
+              <View className="blind-box-title-large">
+                <Text className="blind-box-title-text">{T.blindBoxTitle}</Text>
+                <Text className="sparkle-icon">✨</Text>
+              </View>
+              <View className="gift-box">
+                <Text className="gift-icon">🎁</Text>
+                <Text className="question-mark">?</Text>
               </View>
             </View>
             <View className="blind-box-right">
-              <Text className="blind-box-title">{T.blindBoxTitle}</Text>
               <Text className="blind-box-sub">{T.blindBoxSub}</Text>
               <Text className="blind-box-tip">{T.blindBoxTip}</Text>
+              <Text className="blind-box-tip2">{T.blindBoxTip2}</Text>
               <View className="draw-btn" onClick={goToBlindBox}>
                 <Text className="draw-btn-text">{T.draw}</Text>
+                <Text className="finger-icon">👆</Text>
               </View>
             </View>
           </View>
         </View>
 
-        <View className="chefs-list">
+        {/* 大厨列表 */}
+        <View className="chefs-section">
           {filteredChefs.map((chef) => (
             <View key={chef.id} className="chef-card" onClick={() => goToChefDetail(chef)}>
-              <View className="chef-info-section">
+              <View className="chef-main">
                 <View className="chef-header">
                   {chef.avatar ? (
-                    <Image src={chef.avatar} className="chef-avatar" />
+                    <Image src={chef.avatar} className="chef-avatar" mode="aspectFill" />
                   ) : (
                     <View className="chef-avatar chef-avatar-placeholder">
-                      <Text className="chef-icon">馃懆馃嵆</Text>
+                      <Text className="chef-icon">👨‍🍳</Text>
                     </View>
                   )}
-                  <View className="chef-name-section">
+                  <View className="chef-info">
                     <Text className="chef-name">{chef.name}</Text>
                     <View className="rating-row">
-                      <Text className="star-icon">猸?/Text>
+                      <Text className="star-icon">⭐</Text>
                       <Text className="rating-text">{chef.rating.toFixed(1)}</Text>
-                      <Text className="dish-count">路 {chef.dish_count}閬撹彍</Text>
+                      <Text className="dot">·</Text>
+                      <Text className="dish-count">{chef.dish_count}个</Text>
                     </View>
                   </View>
                 </View>
                 <Text className="specialty-text">{chef.specialty}</Text>
                 <View className="enter-btn">
                   <Text className="enter-btn-text">{T.enter}</Text>
-                  <Text className="arrow-icon">鈥?/Text>
+                  <Text className="arrow-icon">›</Text>
                 </View>
               </View>
 
-              <View className="dishes-section">
-                {chef.top_dishes.length > 0 ? (
-                  chef.top_dishes.slice(0, 2).map((dish, index) => (
-                    <View key={dish.id} className={`top-dish-card ${index > 0 ? 'top-dish-card-margin' : ''}`}>
-                      <View className="top-dish-image-placeholder">
-                        {dish.image ? (
-                          <Image src={dish.image} className="top-dish-image" />
-                        ) : (
-                          <Text className="dish-icon">馃嵄</Text>
-                        )}
+              {/* 常点菜品 */}
+              <View className="top-dishes-section">
+                <View className="section-header">
+                  <Text className="section-icon">🍱</Text>
+                  <Text className="section-title">{T.topDishes}</Text>
+                  <Text className="view-all">{T.viewAll} ›</Text>
+                </View>
+                <View className="dishes-list">
+                  {chef.top_dishes.length > 0 ? (
+                    chef.top_dishes.slice(0, 2).map((dish) => (
+                      <View key={dish.id} className="dish-item">
+                        <View className="dish-image-wrapper">
+                          {dish.image ? (
+                            <Image src={dish.image} className="dish-image" mode="aspectFill" />
+                          ) : (
+                            <View className="dish-image-placeholder">
+                              <Text className="dish-icon">🍱</Text>
+                            </View>
+                          )}
+                        </View>
+                        <View className="dish-info">
+                          <View className="dish-name-row">
+                            <Text className="dish-name">{dish.name}</Text>
+                            <Text className="recommend-tag">推荐</Text>
+                          </View>
+                          <View className="dish-stats">
+                            <Text className="dish-sales">{T.monthSales} {dish.order_count || 128}</Text>
+                            <Text className="dish-rating">{T.rating} {dish.rating || 98}%</Text>
+                          </View>
+                          <View className="dish-price-row">
+                            <Text className="dish-price">¥{dish.price}</Text>
+                            <View className="add-btn">
+                              <Text className="add-icon">+</Text>
+                            </View>
+                          </View>
+                        </View>
                       </View>
-                      <Text className="top-dish-name">{dish.name}</Text>
-                      <Text className="top-dish-price">楼{dish.price}</Text>
+                    ))
+                  ) : (
+                    <View className="no-dishes">
+                      <Text className="no-dishes-text">{T.noDishes}</Text>
                     </View>
-                  ))
-                ) : (
-                  <View className="no-dishes-placeholder">
-                    <Text className="no-dishes-icon">馃嵔锔?/Text>
-                    <Text className="no-dishes-text">{T.noDishes}</Text>
-                  </View>
-                )}
+                  )}
+                </View>
               </View>
             </View>
           ))}
@@ -221,4 +264,3 @@ const OrderScreen = () => {
 }
 
 export default OrderScreen
-

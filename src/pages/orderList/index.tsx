@@ -6,7 +6,7 @@ import { asNumber, pickList } from '../../utils/response'
 import './index.scss'
 
 const T = {
-  title: '组单',
+  title: '订单列表',
   noDishes: '暂无菜品',
   addDish: '添加菜品',
   total: '合计',

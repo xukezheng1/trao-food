@@ -7,17 +7,17 @@ import { useCart } from '../../context/CartContext'
 import './index.scss'
 
 const T = {
-  search: '鎼滅储',
-  hot: '鐑攢',
+  search: '搜索',
+  hot: '热销',
   add: '+',
-  minus: '鈭?,
-  order: '鍘荤粨绠?,
-  noDishes: '鏆傛棤鑿滃搧',
-  confirmChefChange: '褰撳墠璐墿杞︿腑鏈夊叾浠栧ぇ鍘ㄧ殑鑿滃搧锛岀‘瀹氭浛鎹㈠悧锛?,
-  dishDetail: '鑿滃搧璇︽儏',
-  close: '鍏抽棴',
-  addToCart: '鍔犲叆璐墿杞?,
-  cartTitle: '璐墿杞?
+  minus: '−',
+  order: '去结算',
+  noDishes: '暂无菜品',
+  confirmChefChange: '当前购物车中有其他大厨的菜品，确定替换吗？',
+  dishDetail: '菜品详情',
+  close: '关闭',
+  addToCart: '加入购物车',
+  cartTitle: '购物车'
 }
 
 interface Dish {
@@ -45,7 +45,7 @@ interface Category {
 
 const toDish = (item: any): Dish => ({
   id: asNumber(item?.id, 0),
-  name: String(item?.name ?? '鏈煡鑿滃搧'),
+  name: String(item?.name ?? '未知菜品'),
   price: asNumber(item?.price, 0),
   description: item?.description,
   image: item?.image,
@@ -80,7 +80,7 @@ const ChefDetailScreen = () => {
     totalPrice
   } = useCart()
 
-  // 鑾峰彇璐墿杞︿腑鏌愯彍鍝佺殑鏁伴噺
+  // 获取购物车中某菜品的数量
   const getDishQuantity = (dishId: number) => {
     const item = items.find(i => i.dish_id === dishId)
     return item?.quantity || 0
@@ -93,7 +93,7 @@ const ChefDetailScreen = () => {
     setChefAvatar(params?.chefAvatar ? decodeURIComponent(params.chefAvatar) : '')
   }, [router.params])
 
-  // 鍔犺浇鍒嗙被鍒楄〃
+  // 加载分类列表
   const loadCategories = useCallback(async () => {
     if (!chefId) return
     try {
@@ -108,7 +108,8 @@ const ChefDetailScreen = () => {
 
       setCategories(parsedCategories)
 
-      // 榛樿閫変腑绗竴涓垎绫?      if (categoryNames.length > 0 && !activeCategory) {
+      // 默认选中第一个分类
+      if (categoryNames.length > 0 && !activeCategory) {
         setActiveCategory(categoryNames[0])
       }
     } catch (err) {
@@ -116,7 +117,8 @@ const ChefDetailScreen = () => {
     }
   }, [chefId, activeCategory])
 
-  // 鍔犺浇鎸囧畾鍒嗙被鐨勮彍鍝?  const loadDishesByCategory = useCallback(async (category: string) => {
+  // 加载指定分类的菜品
+  const loadDishesByCategory = useCallback(async (category: string) => {
     if (!chefId || !category) return
     setLoading(true)
     try {
@@ -131,7 +133,7 @@ const ChefDetailScreen = () => {
     }
   }, [chefId])
 
-  // 鍔犺浇澶у帹淇℃伅
+  // 加载大厨信息
   const loadChefInfo = useCallback(async () => {
     if (!chefId) return
     try {
@@ -139,7 +141,7 @@ const ChefDetailScreen = () => {
       const chefs = pickList(chefsResult, ['chefs', 'data'])
       const chef = chefs.find((c: any) => asNumber(c?.id, 0) === chefId)
       if (chef) {
-        setChefName(String(chef?.nickname ?? chef?.username ?? '澶у帹'))
+        setChefName(String(chef?.nickname ?? chef?.username ?? '大厨'))
         setChefAvatar(chef?.avatar ?? '')
         setChefProfile(chefId, {
           name: String(chef?.nickname ?? chef?.username ?? '大厨'),
@@ -158,17 +160,18 @@ const ChefDetailScreen = () => {
     }
   }, [chefId, loadChefInfo, loadCategories])
 
-  // 褰撴椿璺冨垎绫诲彉鍖栨椂锛屽姞杞藉搴旇彍鍝?  useEffect(() => {
+  // 当活跃分类变化时，加载对应菜品
+  useEffect(() => {
     if (activeCategory) {
       loadDishesByCategory(activeCategory)
     }
   }, [activeCategory, loadDishesByCategory])
 
-  // 澧炲姞鑿滃搧鏁伴噺
+  // 增加菜品数量
   const handleIncrease = (dish: Dish) => {
     if (currentChefId !== null && currentChefId !== chefId) {
       Taro.showModal({
-        title: '鎻愮ず',
+        title: '提示',
         content: T.confirmChefChange,
         confirmColor: '#EA4C73',
         success: (res) => {
@@ -193,7 +196,7 @@ const ChefDetailScreen = () => {
     }
   }
 
-  // 鍑忓皯鑿滃搧鏁伴噺
+  // 减少菜品数量
   const handleDecrease = (dishId: number) => {
     const currentQty = getDishQuantity(dishId)
     if (currentQty > 1) {
@@ -203,37 +206,41 @@ const ChefDetailScreen = () => {
     }
   }
 
-  // 鏄剧ず鑿滃搧璇︽儏
+  // 显示菜品详情
   const handleShowDetail = (dish: Dish) => {
     setSelectedDish(dish)
     setShowDetailModal(true)
   }
 
-  // 鍏抽棴璇︽儏寮圭獥
+  // 关闭详情弹窗
   const handleCloseDetail = () => {
     setShowDetailModal(false)
     setSelectedDish(null)
   }
 
-  // 鏄剧ず璐墿杞﹀脊绐?  const handleShowCart = () => {
+  // 显示购物车弹窗
+  const handleShowCart = () => {
     if (totalCount > 0) {
       setShowCartModal(true)
     }
   }
 
-  // 鍏抽棴璐墿杞﹀脊绐?  const handleCloseCart = () => {
+  // 关闭购物车弹窗
+  const handleCloseCart = () => {
     setShowCartModal(false)
   }
 
-  // 璺宠浆鍒拌鍗曠‘璁ら〉闈?  const handleCheckout = () => {
+  // 跳转到订单确认页面
+  const handleCheckout = () => {
     if (totalCount === 0) {
-      Taro.showToast({ title: '璇峰厛娣诲姞鑿滃搧', icon: 'none' })
+      Taro.showToast({ title: '请先添加菜品', icon: 'none' })
       return
     }
-    Taro.navigateTo({ url: `/pages/orderConfirm/index?chefId=${chefId}&chefName=${encodeURIComponent(chefName)}` })
+    setChefProfile(chefId, { name: chefName, avatar: chefAvatar })
+    Taro.navigateTo({ url: `/pages/orderConfirm/index?chefId=${chefId}&chefName=${chefName}` })
   }
 
-  // 娓叉煋璐墿杞︽暟閲忔帶鍒跺櫒
+  // 渲染购物车数量控制器
   const renderQuantityControl = (dish: Dish, isInCart = false) => {
     const quantity = getDishQuantity(dish.id)
 
@@ -280,20 +287,20 @@ const ChefDetailScreen = () => {
 
   return (
     <View className="chef-detail-container">
-      {/* 椤堕儴鎼滅储鏍?*/}
+      {/* 顶部搜索栏 */}
       <View className="header">
         <View className="chef-avatar-small">
           {chefAvatar ? (
             <Image src={chefAvatar} className="chef-avatar-img" mode="aspectFill" />
           ) : (
-            <Text className="chef-icon-small">馃懆鈥嶐煃?/Text>
+            <Text className="chef-icon-small">👨‍🍳</Text>
           )}
         </View>
       </View>
 
-      {/* 涓诲唴瀹瑰尯 */}
+      {/* 主内容区 */}
       <View className="main-content">
-        {/* 宸︿晶鍒嗙被鏍?*/}
+        {/* 左侧分类栏 */}
         <ScrollView className="category-sidebar" scrollY>
           {categories.map((cat) => (
             <View
@@ -301,17 +308,17 @@ const ChefDetailScreen = () => {
               className={`category-item ${activeCategory === cat.name ? 'active' : ''}`}
               onClick={() => setActiveCategory(cat.name)}
             >
-              {cat.name === categories[0]?.name && <Text className="fire-icon">馃敟</Text>}
+              {cat.name === categories[0]?.name && <Text className="fire-icon">🔥</Text>}
               <Text className="category-name">{cat.name}</Text>
             </View>
           ))}
         </ScrollView>
 
-        {/* 鍙充晶鑿滃搧鍒楄〃 */}
+        {/* 右侧菜品列表 */}
         <ScrollView className="dish-content" scrollY>
           {loading ? (
             <View className="loading-state">
-              <Text className="loading-text">鍔犺浇涓?..</Text>
+              <Text className="loading-text">加载中...</Text>
             </View>
           ) : dishes.length === 0 ? (
             <View className="empty-state">
@@ -319,34 +326,34 @@ const ChefDetailScreen = () => {
             </View>
           ) : (
             <View className="dish-list">
-              {/* 绗竴涓彍鍝佸ぇ鍥惧睍绀?*/}
+              {/* 第一个菜品大图展示 */}
               {firstDish && (
                 <View className="featured-dish" onClick={() => handleShowDetail(firstDish)}>
                   <View className="featured-header">
-                    <Text className="fire-icon">馃敟</Text>
+                    <Text className="fire-icon">🔥</Text>
                     <Text className="featured-title">{activeCategory}</Text>
-                    <Text className="sparkle-icon">鉁?/Text>
+                    <Text className="sparkle-icon">✨</Text>
                   </View>
                   <View className="featured-card">
                     {firstDish.image ? (
                       <Image src={firstDish.image} className="featured-image" mode="aspectFill" />
                     ) : (
                       <View className="featured-image-placeholder">
-                        <Text className="dish-icon-large">馃嵄</Text>
+                        <Text className="dish-icon-large">🍱</Text>
                       </View>
                     )}
                     <View className="featured-info">
                       <View className="featured-name-row">
                         <Text className="featured-name">{firstDish.name}</Text>
                         <View className="hot-tag">
-                          <Text className="hot-tag-text">鐑攢</Text>
+                          <Text className="hot-tag-text">热销</Text>
                         </View>
                       </View>
                       {firstDish.description && (
                         <Text className="featured-desc">{firstDish.description}</Text>
                       )}
                       <View className="featured-bottom">
-                        <Text className="featured-price">楼{firstDish.price.toFixed(2)}</Text>
+                        <Text className="featured-price">¥{firstDish.price.toFixed(2)}</Text>
                         {renderQuantityControl(firstDish)}
                       </View>
                     </View>
@@ -354,7 +361,7 @@ const ChefDetailScreen = () => {
                 </View>
               )}
 
-              {/* 鍏朵粬鑿滃搧鍒楄〃 */}
+              {/* 其他菜品列表 */}
               <View className="dish-grid">
                 {dishes.slice(1).map((dish) => (
                   <View key={dish.id} className="dish-item" onClick={() => handleShowDetail(dish)}>
@@ -362,7 +369,7 @@ const ChefDetailScreen = () => {
                       <Image src={dish.image} className="dish-item-image" mode="aspectFill" />
                     ) : (
                       <View className="dish-item-image-placeholder">
-                        <Text className="dish-icon">馃嵄</Text>
+                        <Text className="dish-icon">🍱</Text>
                       </View>
                     )}
                     <View className="dish-item-info">
@@ -371,7 +378,7 @@ const ChefDetailScreen = () => {
                         <Text className="dish-item-desc">{dish.description}</Text>
                       )}
                       <View className="dish-item-bottom">
-                        <Text className="dish-item-price">楼{dish.price.toFixed(2)}</Text>
+                        <Text className="dish-item-price">¥{dish.price.toFixed(2)}</Text>
                         {renderQuantityControl(dish)}
                       </View>
                     </View>
@@ -383,28 +390,28 @@ const ChefDetailScreen = () => {
         </ScrollView>
       </View>
 
-      {/* 搴曢儴缁撶畻鏍?*/}
+      {/* 底部结算栏 */}
       {totalCount > 0 && (
         <View className="bottom-bar">
           <View className="cart-info" onClick={handleShowCart}>
             <View className="cart-icon-wrap">
-              <Text className="cart-icon">馃洅</Text>
+              <Text className="cart-icon">🛒</Text>
               {totalCount > 0 && (
                 <View className="cart-badge">
                   <Text className="cart-badge-text">{totalCount}</Text>
                 </View>
               )}
             </View>
-            <Text className="total-price">楼{totalPrice.toFixed(2)}</Text>
+            <Text className="total-price">¥{totalPrice.toFixed(2)}</Text>
           </View>
           <View className="checkout-btn" onClick={handleCheckout}>
             <Text className="checkout-text">{T.order}</Text>
-            <Text className="checkout-arrow">鈥?/Text>
+            <Text className="checkout-arrow">›</Text>
           </View>
         </View>
       )}
 
-      {/* 鑿滃搧璇︽儏寮圭獥 */}
+      {/* 菜品详情弹窗 */}
       {showDetailModal && selectedDish && (
         <View className="detail-modal">
           <View className="detail-modal-overlay" onClick={handleCloseDetail} />
@@ -412,7 +419,7 @@ const ChefDetailScreen = () => {
             <View className="detail-modal-header">
               <Text className="detail-modal-title">{T.dishDetail}</Text>
               <View className="detail-modal-close" onClick={handleCloseDetail}>
-                <Text className="close-icon">鉁?/Text>
+                <Text className="close-icon">✕</Text>
               </View>
             </View>
 
@@ -421,24 +428,24 @@ const ChefDetailScreen = () => {
                 <Image src={selectedDish.image} className="detail-image" mode="aspectFill" />
               ) : (
                 <View className="detail-image-placeholder">
-                  <Text className="detail-icon">馃嵄</Text>
+                  <Text className="detail-icon">🍱</Text>
                 </View>
               )}
 
               <View className="detail-info">
                 <Text className="detail-name">{selectedDish.name}</Text>
-                <Text className="detail-price">楼{selectedDish.price.toFixed(2)}</Text>
+                <Text className="detail-price">¥{selectedDish.price.toFixed(2)}</Text>
 
                 {selectedDish.description && (
                   <View className="detail-section">
-                    <Text className="detail-section-title">鑿滃搧鎻忚堪</Text>
+                    <Text className="detail-section-title">菜品描述</Text>
                     <Text className="detail-desc">{selectedDish.description}</Text>
                   </View>
                 )}
 
                 {selectedDish.ingredients && (
                   <View className="detail-section">
-                    <Text className="detail-section-title">椋熸潗</Text>
+                    <Text className="detail-section-title">食材</Text>
                     <Text className="detail-desc">
                       {Array.isArray(selectedDish.ingredients)
                         ? selectedDish.ingredients
@@ -447,7 +454,7 @@ const ChefDetailScreen = () => {
                                 ? `${ing.name || ''}${ing.amount ? `: ${ing.amount}` : ''}`
                                 : String(ing)
                             )
-                            .join('銆?)
+                            .join('、')
                         : String(selectedDish.ingredients)}
                     </Text>
                   </View>
@@ -455,11 +462,11 @@ const ChefDetailScreen = () => {
 
                 {selectedDish.nutrition && (
                   <View className="detail-section">
-                    <Text className="detail-section-title">钀ュ吇淇℃伅</Text>
+                    <Text className="detail-section-title">营养信息</Text>
                     <View className="nutrition-grid">
                       {selectedDish.nutrition.calories && (
                         <View className="nutrition-item">
-                          <Text className="nutrition-label">鐑噺</Text>
+                          <Text className="nutrition-label">热量</Text>
                           <Text className="nutrition-value">
                             {typeof selectedDish.nutrition.calories === 'object'
                               ? `${selectedDish.nutrition.calories.amount || ''}${selectedDish.nutrition.calories.name || ''}`
@@ -469,7 +476,7 @@ const ChefDetailScreen = () => {
                       )}
                       {selectedDish.nutrition.protein && (
                         <View className="nutrition-item">
-                          <Text className="nutrition-label">铔嬬櫧璐?/Text>
+                          <Text className="nutrition-label">蛋白质</Text>
                           <Text className="nutrition-value">
                             {typeof selectedDish.nutrition.protein === 'object'
                               ? `${selectedDish.nutrition.protein.amount || ''}${selectedDish.nutrition.protein.name || ''}`
@@ -479,7 +486,7 @@ const ChefDetailScreen = () => {
                       )}
                       {selectedDish.nutrition.fat && (
                         <View className="nutrition-item">
-                          <Text className="nutrition-label">鑴傝偑</Text>
+                          <Text className="nutrition-label">脂肪</Text>
                           <Text className="nutrition-value">
                             {typeof selectedDish.nutrition.fat === 'object'
                               ? `${selectedDish.nutrition.fat.amount || ''}${selectedDish.nutrition.fat.name || ''}`
@@ -489,7 +496,7 @@ const ChefDetailScreen = () => {
                       )}
                       {selectedDish.nutrition.carbs && (
                         <View className="nutrition-item">
-                          <Text className="nutrition-label">纰虫按</Text>
+                          <Text className="nutrition-label">碳水</Text>
                           <Text className="nutrition-value">
                             {typeof selectedDish.nutrition.carbs === 'object'
                               ? `${selectedDish.nutrition.carbs.amount || ''}${selectedDish.nutrition.carbs.name || ''}`
@@ -505,9 +512,9 @@ const ChefDetailScreen = () => {
 
             <View className="detail-modal-footer">
               <View className="detail-quantity-section">
-                <Text className="detail-total-label">鍚堣:</Text>
+                <Text className="detail-total-label">合计:</Text>
                 <Text className="detail-total-price">
-                  楼{(selectedDish.price * getDishQuantity(selectedDish.id)).toFixed(2)}
+                  ¥{(selectedDish.price * getDishQuantity(selectedDish.id)).toFixed(2)}
                 </Text>
               </View>
 
@@ -537,7 +544,7 @@ const ChefDetailScreen = () => {
         </View>
       )}
 
-      {/* 璐墿杞﹀脊绐?*/}
+      {/* 购物车弹窗 */}
       {showCartModal && (
         <View className="cart-modal">
           <View className="cart-modal-overlay" onClick={handleCloseCart} />
@@ -545,7 +552,7 @@ const ChefDetailScreen = () => {
             <View className="cart-modal-header">
               <Text className="cart-modal-title">{T.cartTitle}</Text>
               <View className="cart-modal-close" onClick={handleCloseCart}>
-                <Text className="close-icon">鉁?/Text>
+                <Text className="close-icon">✕</Text>
               </View>
             </View>
 
@@ -554,7 +561,7 @@ const ChefDetailScreen = () => {
                 <View key={item.dish_id} className="cart-item">
                   <View className="cart-item-info">
                     <Text className="cart-item-name">{item.name}</Text>
-                    <Text className="cart-item-price">楼{item.price.toFixed(2)}</Text>
+                    <Text className="cart-item-price">¥{item.price.toFixed(2)}</Text>
                   </View>
                   <View className="cart-item-control">
                     <View
@@ -580,8 +587,8 @@ const ChefDetailScreen = () => {
 
             <View className="cart-modal-footer">
               <View className="cart-total-section">
-                <Text className="cart-total-label">鍚堣:</Text>
-                <Text className="cart-total-price">楼{totalPrice.toFixed(2)}</Text>
+                <Text className="cart-total-label">合计:</Text>
+                <Text className="cart-total-price">¥{totalPrice.toFixed(2)}</Text>
               </View>
               <View className="cart-checkout-btn" onClick={handleCheckout}>
                 <Text className="cart-checkout-text">{T.order}</Text>
@@ -595,5 +602,7 @@ const ChefDetailScreen = () => {
 }
 
 export default ChefDetailScreen
+
+
 
 
