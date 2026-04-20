@@ -49,7 +49,8 @@ const CustomTabBar = () => {
     let currentPath = ''
     
     if (isH5) {
-      currentPath = router.path || ''
+      // H5 中 router.path 可能包含查询参数，需要去除
+      currentPath = (router.path || '').split('?')[0]
     } else {
       const pages = Taro.getCurrentPages()
       if (pages.length > 0) {

@@ -1,7 +1,9 @@
 ﻿import Taro from '@tarojs/taro'
 import { storage } from './storage'
 
-export const BASE_URL = 'http://localhost:3000/api'
+// H5 环境使用相对路径（通过代理），小程序使用完整 URL
+const isH5 = process.env.TARO_ENV === 'h5'
+export const BASE_URL = isH5 ? '/api' : 'http://8.135.32.152/api'
 
 interface ResponseData<T = any> {
   success: boolean
@@ -43,11 +45,16 @@ const request = async <T = any>(
     Taro.request({
       ...options,
       success: (res) => {
+        // 检查响应数据是否有效
+        if (!res.data) {
+          reject(new Error('服务器返回空数据'))
+          return
+        }
         const result = res.data as ResponseData<T>
         if (result.success) {
           resolve(result)
         } else {
-          reject(new Error(result.message))
+          reject(new Error(result.message || '请求失败'))
         }
       },
       fail: (err) => {

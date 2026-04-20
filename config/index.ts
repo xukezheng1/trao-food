@@ -8,7 +8,8 @@ export default defineConfig({
     640: 2.34 / 2,
     750: 1,
     828: 1.81 / 2,
-    400: 1.875  // 750/400 = 1.875
+    400: 1.875,  // 750/400 = 1.875
+    375: 2
   },
 
   sourceRoot: 'src',
@@ -20,12 +21,46 @@ export default defineConfig({
     type: 'webpack5'
   },
 
+  plugins: [],
+  
+  defineConstants: {},
+  
+  copy: {
+    patterns: [],
+    options: {}
+  },
+
+
+
   mini: {
     debugReact: true,
     prebundle: {
       enable: false
+    },
+    postcss: {
+      pxtransform: {
+        enable: true,
+        config: {
+          unitToConvert: 'rpx',
+          rpxUnit: 1.875
+        }
+      },
+      url: {
+        enable: true,
+        config: {
+          limit: 10240
+        }
+      },
+      cssModules: {
+        enable: false,
+        config: {
+          namingPattern: 'module',
+          generateScopedName: '[name]__[local]___[hash:base64:5]'
+        }
+      }
     }
   },
+  
   h5: {
     esnextModules: ['@tarojs/taro'],
     router: {
@@ -39,6 +74,41 @@ export default defineConfig({
     // 禁用模块联邦警告
     module: {
       federation: false
+    },
+    devServer: {
+      port: 10086,
+      https: false,
+      proxy: {
+        '/api': {
+          target: 'http://8.135.32.152',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/api': '/api'
+          }
+        }
+      }
+    },
+    postcss: {
+      pxtransform: {
+        enable: true,
+        config: {
+          unitToConvert: 'rpx',
+          rpxUnit: 1.875
+        }
+      },
+      url: {
+        enable: true,
+        config: {
+          limit: 10240
+        }
+      },
+      cssModules: {
+        enable: false,
+        config: {
+          namingPattern: 'module',
+          generateScopedName: '[name]__[local]___[hash:base64:5]'
+        }
+      }
     }
   }
 })
