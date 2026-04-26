@@ -104,14 +104,14 @@ export const api = {
   },
   order: {
     chefs: () => request('/order/chefs'),
-    dishes: (chefId: number) => request(`/order/dishes/${chefId}`),
+    dishes: (chefId?: number) => request(chefId ? `/order/dishes/${chefId}` : '/order/dishes'),
     topDishes: (chefId: number) => request(`/order/top-dishes/${chefId}`),
     createDish: (data: { name: string; description?: string; price: number; image?: string; category_id?: number; chef_id?: number }) =>
       request('/order/dish', 'POST', data),
     updateDish: (dishId: number, data: { name?: string; description?: string; price?: number; image?: string; category_id?: number }) =>
       request(`/order/dish/${dishId}`, 'PUT', data),
     deleteDish: (dishId: number) => request(`/order/dish/${dishId}`, 'DELETE'),
-    submit: (data: { chef_id: number; items: Array<{ dish_id: number; quantity?: number }> }) =>
+    submit: (data: { chef_id: number; items: Array<{ dish_id: number; quantity?: number }>; remark?: string }) =>
       request('/order/submit', 'POST', data),
     list: (params?: { status?: string; page?: number; limit?: number }) =>
       request('/order/list', 'GET', params),
@@ -174,6 +174,7 @@ export const api = {
       steps?: Array<{ text: string; image?: string }>
       image?: string
       price: number
+      status?: 'draft' | 'published'
     }) => request('/recipe', 'POST', data),
     update: (
       id: number,
@@ -185,6 +186,7 @@ export const api = {
         steps?: Array<{ text: string; image?: string }>
         image?: string
         price?: number
+        status?: 'draft' | 'published'
       }
     ) => request(`/recipe/${id}`, 'PUT', data),
     remove: (id: number) => request(`/recipe/${id}`, 'DELETE'),

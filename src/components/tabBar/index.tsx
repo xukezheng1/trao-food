@@ -33,6 +33,7 @@ const isH5 = process.env.TARO_ENV === 'h5'
 
 const CustomTabBar = () => {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [visible, setVisible] = useState(true)
   const [orderBadge, setOrderBadge] = useState(0)
   const { user, isLogin } = useUser()
   const router = useRouter()
@@ -43,11 +44,6 @@ const CustomTabBar = () => {
   const isChef = user?.role === 'chef'
   const tabs = isChef ? chefTabs : foodieTabs
   
-  // 调试：打印当前角色
-  useEffect(() => {
-    console.log('[TabBar] user.role:', user?.role, 'isChef:', isChef, 'tabs:', tabs.map(t => t.text))
-  }, [user?.role, isChef, tabs])
-
   useEffect(() => {
     // H5 环境使用 router.path，小程序使用 getCurrentPages
     let currentPath = ''
@@ -67,6 +63,9 @@ const CustomTabBar = () => {
       const index = tabs.findIndex(item => item.pagePath === currentPath)
       if (index !== -1) {
         setActiveIndex(index)
+        setVisible(true)
+      } else {
+        setVisible(false)
       }
     }
   }, [tabs, router.path])
@@ -142,7 +141,7 @@ const CustomTabBar = () => {
     Taro.switchTab({ url: item.pagePath })
   }
 
-  if (!isLogin) return null
+  if (!visible) return null
 
   return (
     <View className='custom-tab-bar'>

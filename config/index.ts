@@ -80,7 +80,7 @@ export default defineConfig({
       https: false,
       proxy: {
         '/api': {
-          target: 'http://8.135.32.152',
+          target: 'http://192.168.1.3:3000',
           changeOrigin: true,
           pathRewrite: {
             '^/api': '/api'

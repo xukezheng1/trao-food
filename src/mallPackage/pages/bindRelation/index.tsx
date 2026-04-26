@@ -1,7 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { View, Text, Input, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import giftIcon from '../../../assets/icon/gift.png'
+import coupleImage from '../../../assets/cp.png'
+import chefIcon from '../../../assets/icon/planorder.png'
+import calendarIcon from '../../../assets/icon/icon (9).jpg'
 import './index.scss'
 
 const CODE_LENGTH = 7
@@ -28,16 +31,21 @@ const sanitizeCode = (value: string) =>
 const BindRelationScreen = () => {
   const [bindCode, setBindCode] = useState('5201314')
   const [statusBarHeight, setStatusBarHeight] = useState(0)
+  const [inputFocused, setInputFocused] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
 
   useEffect(() => {
-    const systemInfo = Taro.getSystemInfoSync()
-    setStatusBarHeight(systemInfo.statusBarHeight || 0)
+    try {
+      const systemInfo = Taro.getSystemInfoSync()
+      setStatusBarHeight(systemInfo.statusBarHeight || 0)
+    } catch (e) {
+      console.error('获取系统信息失败', e)
+    }
   }, [])
 
-  const codeChars = useMemo(() => {
-    const chars = sanitizeCode(bindCode).split('')
-    return Array.from({ length: CODE_LENGTH }, (_, index) => chars[index] || '')
-  }, [bindCode])
+  const closeSuccessModal = () => {
+    setShowSuccess(false)
+  }
 
   const handlePaste = async () => {
     try {
@@ -53,8 +61,7 @@ const BindRelationScreen = () => {
       Taro.showToast({ title: '请输入完整绑定码', icon: 'none' })
       return
     }
-
-    Taro.showToast({ title: '绑定成功', icon: 'success' })
+    setShowSuccess(true)
   }
 
   return (
@@ -65,124 +72,112 @@ const BindRelationScreen = () => {
             <Text className="back-icon">‹</Text>
           </View>
           <View className="nav-help" onClick={() => Taro.showToast({ title: '联系TA获取绑定码', icon: 'none' })}>
-            <Text className="help-dot" />
             <Text className="help-text">{T.help}</Text>
           </View>
         </View>
       </View>
 
-      <View className="page-decor decor-left">
-        <Text className="spark spark-one">✦</Text>
-        <Text className="spark spark-two">✧</Text>
-        <Text className="spark spark-three">✦</Text>
-      </View>
+      <View className="bind-content">
+        <View className="bind-header">
+          <Text className="bind-title">{T.title}</Text>
+          <Text className="bind-subtitle">{T.subtitle}</Text>
+        </View>
 
-      <View className="page-decor decor-right">
-        <Text className="tape" />
-        <Text className="sticker-text">一起解锁{'\n'}更多甜蜜！</Text>
-        <Text className="sticker-heart">💕</Text>
-      </View>
-
-      <View className="bind-header">
-        <Text className="bind-title">{T.title}💕</Text>
-        <Text className="bind-subtitle">{T.subtitle}</Text>
-      </View>
-
-      <View className="user-cards">
-        <View className="user-card me">
-          <View className="card-badge">{T.me}</View>
-          <View className="avatar-shell boy">
-            <View className="avatar-hair" />
-            <View className="avatar-face">
-              <Text className="eye left-eye" />
-              <Text className="eye right-eye" />
-              <Text className="cheek left-cheek" />
-              <Text className="cheek right-cheek" />
-              <Text className="mouth" />
+        <View className="user-cards">
+          <View className="user-card me">
+            <View className="card-badge">{T.me}</View>
+            <View className="card-content">
+              <Text className="user-name">{T.myName}</Text>
+              <View className="user-tag">
+                <Text className="tag-text">{T.myTag}</Text>
+              </View>
             </View>
           </View>
-          <Text className="user-name">{T.myName}</Text>
-          <View className="user-tag">
-            <Text className="tag-heart">♥</Text>
-            <Text className="tag-text">{T.myTag}</Text>
-            <Text className="tag-fruit">🍓</Text>
+
+          <View className="connect-heart">
+            <Text className="heart-core">♡</Text>
           </View>
-        </View>
 
-        <View className="connect-heart">
-          <Text className="heart-line left-line" />
-          <Text className="heart-core">♡</Text>
-          <Text className="heart-line right-line" />
-        </View>
-
-        <View className="user-card ta">
-          <View className="card-badge">{T.ta}</View>
-          <View className="avatar-shell girl">
-            <View className="avatar-hair" />
-            <View className="avatar-face">
-              <Text className="eye left-eye" />
-              <Text className="eye right-eye" />
-              <Text className="cheek left-cheek" />
-              <Text className="cheek right-cheek" />
-              <Text className="mouth" />
+          <View className="user-card ta">
+            <View className="card-badge ta-badge">{T.ta}</View>
+            <View className="card-content">
+              <Text className="user-name">{T.taName}</Text>
+              <View className="user-tag">
+                <Text className="tag-text">{T.taTag}</Text>
+              </View>
             </View>
           </View>
-          <Text className="user-name">{T.taName}</Text>
-          <View className="user-tag">
-            <Text className="tag-heart">♥</Text>
-            <Text className="tag-text">{T.taTag}</Text>
-            <Text className="tag-fruit">🧋</Text>
+        </View>
+
+        <View className="bind-panel">
+          <View className="panel-header">
+            <Text className="input-label">{T.inputLabel}</Text>
+            <Text className="paste-link" onClick={handlePaste}>粘贴</Text>
+          </View>
+
+          <View className="code-input-box" onClick={() => setInputFocused(true)}>
+            <Input
+              className="real-code-input"
+              value={bindCode}
+              maxlength={CODE_LENGTH}
+              type="text"
+              focus={inputFocused}
+              onBlur={() => setInputFocused(false)}
+              onInput={(event) => setBindCode(sanitizeCode(event.detail.value))}
+            />
+            <View className="code-cells">
+              {bindCode.split('').map((char, index) => (
+                <Text className="code-cell" key={index}>{char}</Text>
+              ))}
+            </View>
+            <View className="gift-card" onClick={handlePaste}>
+              <Image className="gift-image" src={giftIcon} mode="aspectFit" />
+              <Text className="gift-text">粘贴</Text>
+            </View>
+          </View>
+
+          <Text className="input-hint">{T.hint}</Text>
+        </View>
+
+        <View className="bind-btn-wrapper">
+          <View className="bind-btn" onClick={handleBind}>
+            <Text className="bind-btn-text">{T.bindNow}</Text>
           </View>
         </View>
+
+        <View className="generate-code" onClick={() => Taro.showToast({ title: '已生成绑定码', icon: 'none' })}>
+          <Text className="generate-text">{T.generateCode}</Text>
+        </View>
       </View>
 
-      <View className="bind-panel">
-        <View className="panel-header">
-          <Text className="input-label">{T.inputLabel}</Text>
-          <Text className="paste-link" onClick={handlePaste}>↩ 粘贴</Text>
-        </View>
+      {showSuccess && (
+        <View className="success-modal" onClick={closeSuccessModal}>
+          <View className="success-card">
+            <View className="success-decor decor-heart-one">❤</View>
+            <View className="success-decor decor-heart-two">❤</View>
+            <View className="success-decor decor-star-one">✦</View>
+            <Text className="success-title">绑定成功！</Text>
+            <Image className="success-couple" src={coupleImage} mode="aspectFit" />
 
-        <View className="code-input-box">
-          <Input
-            className="real-code-input"
-            value={bindCode}
-            maxlength={CODE_LENGTH}
-            type="text"
-            onInput={(event) => setBindCode(sanitizeCode(event.detail.value))}
-          />
-          <View className="code-cells">
-            {codeChars.slice(0, 3).map((char, index) => (
-              <Text className="code-cell" key={`start-${index}`}>{char}</Text>
-            ))}
-            <Text className="code-dot" />
-            {codeChars.slice(3).map((char, index) => (
-              <Text className="code-cell" key={`end-${index}`}>{char}</Text>
-            ))}
+            <View className="success-info">
+              <Text className="success-desc">我们正式成为彼此的另一半啦！{'\n'}一起经营小窝，开启甜蜜生活吧~</Text>
+              <View className="success-action">
+                <Text className="success-action-text">太棒啦！❤</Text>
+              </View>
+            </View>
+
+            <View className="success-note note-calendar">
+              <Image className="success-note-icon" src={calendarIcon} mode="aspectFill" />
+              <Text className="success-note-text">约会日历{'\n'}已解锁</Text>
+            </View>
+
+            <View className="success-note note-task">
+              <Image className="success-note-icon" src={chefIcon} mode="aspectFit" />
+              <Text className="success-note-text">每日任务{'\n'}一起打卡哦！</Text>
+            </View>
           </View>
-          <View className="gift-card">
-            <Image className="gift-image" src={giftIcon} mode="aspectFit" />
-            <Text className="gift-text">粘贴</Text>
-          </View>
         </View>
-
-        <Text className="input-hint">{T.hint}</Text>
-      </View>
-
-      <View className="bind-btn-wrapper">
-        <View className="bind-btn" onClick={handleBind}>
-          <Text className="bind-btn-text">{T.bindNow}</Text>
-        </View>
-        <View className="tap-hand">
-          <Text className="tap-line line-one" />
-          <Text className="tap-line line-two" />
-          <Text className="tap-line line-three" />
-          <Text className="hand-icon">☝</Text>
-        </View>
-      </View>
-
-      <View className="generate-code" onClick={() => Taro.showToast({ title: '已生成绑定码', icon: 'none' })}>
-        <Text className="generate-text">{T.generateCode} 〉</Text>
-      </View>
+      )}
     </View>
   )
 }

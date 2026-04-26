@@ -2,14 +2,6 @@ import Taro from '@tarojs/taro'
 import { storage } from './storage'
 import { BASE_URL } from './api'
 
-// 七牛云上传域名（根据后端返回的 region 使用正确的域名）
-const QINIU_UPLOAD_URL = 'https://up-z2.qiniup.com'
-
-// 用于构建完整URL的API基础地址（始终包含域名）
-const isH5 = process.env.TARO_ENV === 'h5'
-const isDev = process.env.NODE_ENV === 'development'
-const API_BASE_URL = (isH5 && isDev) ? 'http://localhost:3000/api' : 'http://8.135.32.152/api'
-
 /**
  * 获取七牛云上传 token
  */
@@ -30,32 +22,34 @@ export const getQiniuUploadToken = async (filename?: string, folder: string = 'i
   throw new Error(result.message || '获取上传token失败')
 }
 
+const normalizeUploadResult = (data: any): string => {
+  const url = String(data?.url || '')
+  if (!url) {
+    throw new Error('上传结果缺少图片地址')
+  }
+  return getProxiedImageUrl(url)
+}
+
 /**
- * 上传图片到七牛云
+ * 通过后端代理上传图片到七牛云，避免 H5 直传七牛触发 CORS。
  */
-export const uploadToQiniu = async (file: File, token: string, key: string): Promise<string> => {
-  const formData = new FormData()
-  // 七牛云要求 file 必须是最后一个字段
-  formData.append('token', token)
-  formData.append('key', key)
-  formData.append('file', file)
+export const uploadTempFileToQiniuProxy = async (filePath: string, folder: string = 'images'): Promise<string> => {
+  const token = storage.getItem('token')
 
-  console.log('[Upload] Uploading to Qiniu:', { token: token.substring(0, 20) + '...', key })
-
-  const response = await fetch(QINIU_UPLOAD_URL, {
-    method: 'POST',
-    body: formData
+  const res = await Taro.uploadFile({
+    url: `${BASE_URL}/upload/qiniu`,
+    filePath,
+    name: 'file',
+    formData: { folder },
+    header: token ? { Authorization: `Bearer ${token}` } : {}
   })
 
-  const resultText = await response.text()
-  console.log('[Upload] Qiniu response:', response.status, resultText)
-
-  if (!response.ok) {
-    throw new Error(`上传到七牛云失败: ${resultText}`)
+  const result = typeof res.data === 'string' ? JSON.parse(res.data) : res.data
+  if (!result?.success) {
+    throw new Error(result?.message || '上传图片失败')
   }
 
-  const result = JSON.parse(resultText)
-  return result.key
+  return normalizeUploadResult(result.data)
 }
 
 /**
@@ -71,48 +65,7 @@ export const chooseAndUploadImage = async (folder: string = 'images'): Promise<s
   })
 
   const tempFilePath = res.tempFilePaths[0]
-  const fileName = tempFilePath.split('/').pop() || 'image.jpg'
-
-  // 2. 获取上传 token
-  const { token, key, domain } = await getQiniuUploadToken(fileName, folder)
-
-  // 3. H5 环境：将临时文件转换为 File 对象
-  if (process.env.TARO_ENV === 'h5') {
-    const response = await fetch(tempFilePath)
-    const blob = await response.blob()
-    const file = new File([blob], fileName, { type: blob.type })
-    
-    // 上传到七牛云
-    await uploadToQiniu(file, token, key)
-  } else {
-    // 小程序环境：使用 Taro.uploadFile 直接上传到七牛云
-    await new Promise((resolve, reject) => {
-      Taro.uploadFile({
-        url: QINIU_UPLOAD_URL,
-        filePath: tempFilePath,
-        name: 'file',
-        formData: {
-          token,
-          key
-        },
-        success: (res) => {
-          if (res.statusCode === 200) {
-            resolve(JSON.parse(res.data))
-          } else {
-            reject(new Error('上传到七牛云失败'))
-          }
-        },
-        fail: (err) => {
-          reject(new Error(err.errMsg || '上传失败'))
-        }
-      })
-    })
-  }
-
-  // 4. 返回API转发后的图片URL（使用完整域名）
-  // 七牛云URL统一使用https协议
-  const qiniuUrl = `http://${domain}/${key}`
-  return `${API_BASE_URL}/upload/qiniu-image?url=${encodeURIComponent(qiniuUrl)}`
+  return uploadTempFileToQiniuProxy(tempFilePath, folder)
 }
 
 /**
@@ -124,7 +77,7 @@ export const getProxiedImageUrl = (url?: string): string => {
 
   // 如果已经是本地API地址，直接返回
   if (url.includes('/api/upload/qiniu-image') || url.startsWith('/api/')) {
-    return url.startsWith('http') ? url : `${BASE_URL}${url}`
+    return url
   }
 
   // 如果是七牛云地址，转换为API转发地址

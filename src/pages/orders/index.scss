@@ -11,24 +11,24 @@
   border-bottom: 2rpx solid #F0F0F0;
 }
 
-.tab-item {
+.order-tab-item {
   flex: 1;
   padding: 16rpx;
   text-align: center;
 }
 
-.tab-text {
+.order-tab-text {
   font-size: 30rpx;
   color: #8B6B73;
   position: relative;
 }
 
-.tab-text.active {
+.order-tab-text.active {
   color: #D9465F;
   font-weight: 600;
 }
 
-.tab-text.active::after {
+.order-tab-text.active::after {
   content: '';
   position: absolute;
   bottom: -16rpx;

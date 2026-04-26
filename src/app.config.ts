@@ -24,7 +24,6 @@ export default {
     {
       root: 'chefPackage',
       pages: [
-        'pages/chefDetail/index',
         'pages/chefSubmission/index',
         'pages/foodieDishSubmit/index',
         'pages/chefOrders/index'
@@ -68,14 +67,8 @@ export default {
       backgroundColor: '#FFFFFF',
       borderStyle: 'white',
       list: [
-                {
-          pagePath: 'pages/home/index',
-          text: '首页',
-          iconPath: 'assets/homeIcon.jpg',
-          selectedIconPath: 'assets/homeIcon.jpg'
-        },
         {
-          pagePath: 'pages/order/index',
+          pagePath: 'pages/home/index',
           text: '首页',
           iconPath: 'assets/homeIcon.jpg',
           selectedIconPath: 'assets/homeIcon.jpg'
@@ -87,19 +80,19 @@ export default {
           selectedIconPath: 'assets/plan.jpg'
         },
         {
-          pagePath: 'pages/mall/index',
+          pagePath: 'pages/order/index',
           text: '点餐',
           iconPath: 'assets/diandan.jpg',
           selectedIconPath: 'assets/diandan.jpg'
         },
         {
-          pagePath: 'pages/family/index',
+          pagePath: 'pages/mall/index',
           text: '商城',
           iconPath: 'assets/sahngcheng.jpg',
           selectedIconPath: 'assets/sahngcheng.jpg'
         },
         {
-          pagePath: 'pages/login/index',
+          pagePath: 'pages/family/index',
           text: '我的',
           iconPath: 'assets/my.jpg',
           selectedIconPath: 'assets/my.jpg'

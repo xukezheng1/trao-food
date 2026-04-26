@@ -155,11 +155,6 @@ const HomeScreen = () => {
         <View className="content-wrap">
           {/* 情侣信息卡片 */}
           <View className="couple-card">
-            <Image
-              src={homeTop}
-              mode="widthFix"
-              className="couple-card-img"
-            />
             {/* 右侧信息区域 */}
             <View className="couple-info">
               {/* 名称行 */}
@@ -177,8 +172,6 @@ const HomeScreen = () => {
                 <Text className="couple-days">520</Text>
                 <Text className="days-unit">天</Text>
               </View>
-              {/* 底部文字 */}
-              <Text className="days-desc"> 💕一起走过的每一天都值得纪念</Text>
             </View>
           </View>
 
@@ -193,8 +186,7 @@ const HomeScreen = () => {
             <View className="coins-row">
               <Text className="coins-amount">{data.coins.toLocaleString()}</Text>
               <View className="exchange-btn" onClick={goToExchange}>
-                <Text className="exchange-text">{T.exchange}</Text>
-                <Text className="exchange-arrow">›</Text>
+                  <View className="exchange-line">去兑换›</View>
               </View>
             </View>
           </View>
@@ -214,7 +206,6 @@ const HomeScreen = () => {
             </View>
             <View className="feature-item" onClick={goToTree}>
               <View className="feature-icon tree">
-                <View className="growing-badge">{T.growing}</View>
                 <Image src={treeIcon} className="feature-img" mode="aspectFill" />
               </View>
               <Text className="feature-name">{T.coupleTree}</Text>

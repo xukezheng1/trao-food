@@ -170,10 +170,10 @@ const OrdersTabScreen = () => {
         {tabs.map((tab) => (
           <View
             key={tab.key}
-            className={`tab-item ${activeTab === tab.key ? 'active' : ''}`}
+            className={`order-tab-item ${activeTab === tab.key ? 'active' : ''}`}
             onClick={() => setActiveTab(tab.key)}
           >
-            <Text className={`tab-text ${activeTab === tab.key ? 'active' : ''}`}>{tab.label}</Text>
+            <Text className={`order-tab-text ${activeTab === tab.key ? 'active' : ''}`}>{tab.label}</Text>
           </View>
         ))}
       </View>

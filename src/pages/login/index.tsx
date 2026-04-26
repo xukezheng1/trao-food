@@ -53,7 +53,7 @@ const AuthScreen = () => {
       await login(username.trim(), password)
       Taro.showToast({ title: '登录成功', icon: 'success' })
       setTimeout(() => {
-        const redirectUrl = user.role === 'chef' ? '/pages/recipe/index' : '/pages/order/index'
+        const redirectUrl = '/pages/home/index'
         Taro.reLaunch({ url: redirectUrl })
       }, 1500)
     } catch (error: any) {

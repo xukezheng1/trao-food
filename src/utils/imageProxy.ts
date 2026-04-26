@@ -14,7 +14,7 @@ export const getProxiedImageUrl = (url?: string): string => {
 
   // 如果已经是本地API地址，直接返回
   if (url.includes('/api/upload/qiniu-image') || url.startsWith('/api/')) {
-    return url.startsWith('http') ? url : `${BASE_URL}${url}`
+    return url
   }
 
   // 如果是七牛云地址，转换为API转发地址

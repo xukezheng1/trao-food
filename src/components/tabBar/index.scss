@@ -1,18 +1,20 @@
 .custom-tab-bar {
   position: fixed;
-  bottom: 8rpx;
-  height: 110rpx;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 104rpx;
   background-color: #FFFFFF;
   display: flex;
   width: 100%;
-  left: 0;
-  right: 0;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-around;
-  border-radius: 24rpx;
+  border-radius: 24rpx 24rpx 0 0;
   box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
-  padding-top: 8rpx;
-  z-index: 999;
+  z-index: 99999;
+  box-sizing: border-box;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 .tab-item {
@@ -20,21 +22,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  padding: 8rpx 0 16rpx;
-  transition: all 0.3s;
+  justify-content: center;
+  transition: opacity 0.3s, color 0.3s;
   height: 100%;
+  padding-top: 4rpx;
 }
 
 // 中间凸起按钮样式
 .tab-item.center-item {
   position: relative;
-  padding-bottom: 8rpx;
+  padding-bottom: 0;
+  margin-top: -14rpx;
 }
 
 .tab-icon-wrap {
   position: relative;
-  margin-bottom: 4rpx;
 }
 
 // 中间按钮图标容器
@@ -43,37 +45,39 @@
 }
 
 .tab-icon {
-  width: 58rpx;
-  height: 58rpx;
+  width: 46rpx;
+  height: 46rpx;
   opacity: 0.62;
+  border-radius: 50%;
 }
 
 // 中间按钮图标
 .tab-icon.center-icon {
-  width: 120rpx;
-  height: 120rpx;
+  width: 72rpx;
+  height: 72rpx;
   opacity: 1;
   border-radius: 50%;
-  box-shadow: 0 8rpx 24rpx rgba(234, 76, 115, 0.35);
+  box-shadow: 0 6rpx 18rpx rgba(234, 76, 115, 0.35);
 }
 
 .tab-item.active .tab-icon {
   opacity: 1;
+  transform: scale(1.01);
 }
 
-// 中间按钮active状态不放大
+// 中间按钮active状态也放大
 .tab-item.active .tab-icon.center-icon {
-  transform: none;
+  transform: scale(1.01);
 }
 
 .tab-text {
-  font-size: 22rpx;
+  font-size: 18rpx;
   color: #8C8C8C;
 }
 
 // 中间按钮文字
 .tab-text.center-text {
-  margin-top: 8rpx;
+  margin-top: 2rpx;
 }
 
 .tab-item.active .tab-text {
@@ -83,23 +87,83 @@
 
 .badge {
   position: absolute;
-  top: -8rpx;
-  right: -16rpx;
-  min-width: 32rpx;
-  height: 32rpx;
-  border-radius: 16rpx;
+  top: -6rpx;
+  right: -12rpx;
+  min-width: 28rpx;
+  height: 28rpx;
+  border-radius: 14rpx;
   background-color: #EA4C73;
   align-items: center;
   justify-content: center;
-  padding: 0 8rpx;
+  padding: 0 6rpx;
   display: flex;
-  border: 3rpx solid #FFFFFF;
+  border: 2rpx solid #FFFFFF;
 }
 
 .badge-text {
   color: #FFFFFF;
-  font-size: 20rpx;
+  font-size: 18rpx;
   font-weight: 700;
+}
+
+// 防止页面内 .tab-item/.tab-text 等通用类名覆盖底部 tabBar。
+.custom-tab-bar .tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  padding-top: 4rpx;
+}
+
+.custom-tab-bar .tab-item.center-item {
+  position: relative;
+  margin-top: -14rpx;
+}
+
+.custom-tab-bar .tab-icon-wrap {
+  position: relative;
+}
+
+.custom-tab-bar .tab-icon-wrap.center-icon-wrap {
+  margin-bottom: 0;
+}
+
+.custom-tab-bar .tab-icon {
+  width: 46rpx;
+  height: 46rpx;
+  opacity: 0.62;
+}
+
+.custom-tab-bar .tab-icon.center-icon {
+  width: 72rpx;
+  height: 72rpx;
+  opacity: 1;
+  border-radius: 50%;
+  box-shadow: 0 6rpx 18rpx rgba(234, 76, 115, 0.35);
+}
+
+.custom-tab-bar .tab-text {
+  margin: 0;
+  font-size: 18rpx;
+  color: #8C8C8C;
+  font-weight: 400;
+  position: static;
+}
+
+.custom-tab-bar .tab-text::after {
+  display: none;
+}
+
+.custom-tab-bar .tab-item.active .tab-text {
+  color: #E84D5B;
+  font-weight: 600;
+}
+
+.custom-tab-bar .tab-text.center-text {
+  margin-top: 2rpx;
 }
 
 @media screen and (min-width: 768px) {

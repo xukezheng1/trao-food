@@ -6,21 +6,23 @@ import { asNumber, pickList } from '../../utils/response'
 import { useCart } from '../../context/CartContext'
 import { useUser } from '../../context/UserContext'
 import CustomTabBar from '../../components/tabBar'
+import orderCarIcon from '../../assets/icon/orderCar.png'
+import zaocanIcon from '../../assets/icon/zaocan.png'
+import wucanIcon from '../../assets/icon/wucan.png'
+import wancanIcon from '../../assets/icon/wancan.png'
+import shucaiIcon from '../../assets/icon/shucai.png'
+import huncaiIcon from '../../assets/icon/huncai.png'
+import tianpinIcon from '../../assets/icon/tianpin.png'
+import yinpinIcon from '../../assets/icon/yinpin.png'
+import wangheIcon from '../../assets/icon/manghe.png'
+import xianshiIcon from '../../assets/icon/xainshi.png'
 import './index.scss'
 
 const T = {
-  search: '搜索菜品、商家',
-  blindBoxTitle: '盲盒',
-  blindBoxSub: '菜品盲盒',
-  blindBoxTip: '花 30 元抽惊喜美食',
-  blindBoxTip2: '每次抽取 1 份随机菜品',
-  draw: '抽一个',
-  enter: '进入点餐',
+  location: '想要小厨房呀',
   noDishes: '暂无菜品',
-  topDishes: '推荐菜品',
-  viewAll: '查看全部',
-  monthSales: '月售',
-  rating: '好评率'
+  goOrder: '去下单',
+  total: '合计'
 }
 
 interface Dish {
@@ -30,18 +32,14 @@ interface Dish {
   image?: string
   order_count?: number
   rating?: number
+  category?: string
 }
 
 interface Chef {
   id: number
-  name: string
   nickname?: string
-  username: string
-  rating: number
-  specialty: string
+  username?: string
   avatar?: string
-  dish_count: number
-  top_dishes: Dish[]
 }
 
 const toDish = (item: any): Dish => ({
@@ -50,57 +48,87 @@ const toDish = (item: any): Dish => ({
   price: asNumber(item?.price, 0),
   image: item?.image,
   order_count: asNumber(item?.order_count ?? item?.orderCount, 0),
-  rating: asNumber(item?.rating ?? 98, 0)
+  rating: asNumber(item?.rating ?? 98, 0),
+  category: normalizeCategory(item?.category)
 })
 
-const toChef = (item: any): Chef => ({
-  id: asNumber(item?.id, 0),
-  name: String(item?.nickname ?? item?.username ?? '未知大厨'),
-  nickname: item?.nickname,
-  username: String(item?.username ?? ''),
-  rating: asNumber(item?.rating ?? 5.0, 0),
-  specialty: String(item?.specialty ?? '未填专业'),
-  avatar: item?.avatar,
-  dish_count: asNumber(item?.dish_count ?? item?.dishCount ?? 0, 0),
-  top_dishes: []
-})
+const categories = [
+    { id: 'all', name: '全部', icon: '' },
+  { id: 'zaocan', name: '早餐', icon: zaocanIcon },
+  { id: 'wucan', name: '午餐', icon: wucanIcon },
+  { id: 'wancan', name: '晚餐', icon: wancanIcon },
+  { id: 'shucai', name: '蔬菜', icon: shucaiIcon },
+  { id: 'huncai', name: '荤菜', icon: huncaiIcon },
+  { id: 'tianpin', name: '甜品', icon: tianpinIcon },
+  { id: 'yinpin', name: '饮品', icon: yinpinIcon },
+  { id: 'wanghe', name: '盲盒', icon: wangheIcon },
+  { id: 'xianshi', name: '限时', icon: xianshiIcon },
+]
+
+const categoryAlias: Record<string, string> = {
+  breakfast: 'zaocan',
+  lunch: 'wucan',
+  dinner: 'wancan',
+  dessert: 'tianpin',
+  drink: 'yinpin',
+  manghe: 'wanghe',
+  xainshi: 'xianshi'
+}
+
+const normalizeCategory = (category: any) => {
+  const key = String(category ?? 'all')
+  return categoryAlias[key] || key
+}
+
+const localDishImages: Record<number, string> = {
+  1: zaocanIcon,
+  2: shucaiIcon,
+  3: tianpinIcon,
+  4: wucanIcon,
+  5: zaocanIcon,
+  6: wucanIcon,
+  7: huncaiIcon,
+  8: shucaiIcon
+}
 
 const OrderScreen = () => {
-  const [searchText, setSearchText] = useState('')
-  const [chefs, setChefs] = useState<Chef[]>([])
+  const [dishes, setDishes] = useState<Dish[]>([])
+  const [currentChef, setCurrentChef] = useState<Chef | null>(null)
+  const [activeCategory, setActiveCategory] = useState('all')
   const [refreshing, setRefreshing] = useState(false)
-  const { totalCount } = useCart()
+  const { items, totalCount, totalPrice, addItem, removeItem } = useCart()
   const { isLogin, authReady } = useUser()
 
-  // 检查登录状态
   useEffect(() => {
     if (authReady && !isLogin) {
       Taro.reLaunch({ url: '/pages/login/index' })
     }
   }, [authReady, isLogin])
 
-  const loadChefs = useCallback(async () => {
+  const loadDishes = useCallback(async () => {
     if (!isLogin) return
     setRefreshing(true)
     try {
-      const result = await api.order.chefs()
-      let chefList = pickList(result, ['data']).map(toChef)
+      const chefsResult = await api.order.chefs()
+      const chefs = pickList(chefsResult, ['chefs', 'data']) as Chef[]
+      const chef = chefs[0] || null
+      setCurrentChef(chef)
 
-      chefList = await Promise.all(
-        chefList.map(async (chef) => {
-          try {
-            const topDishesResult = await api.order.topDishes(chef.id)
-            const topDishes = pickList(topDishesResult, ['data']).map(toDish)
-            return { ...chef, top_dishes: topDishes }
-          } catch {
-            return chef
-          }
-        })
-      )
-
-      setChefs(chefList)
+      const result = await api.order.dishes(chef?.id)
+      const dishList = pickList(result, ['data']).map(toDish)
+      setDishes(dishList)
     } catch (err) {
-      console.error('Load chefs error:', err)
+      console.error('Load dishes error:', err)
+      setDishes([
+        { id: 1, name: '火腿煎蛋三明治', price: 18, category: 'zaocan', image: '', order_count: 120, rating: 98 },
+        { id: 2, name: '牛油果鸡蛋沙拉', price: 22, category: 'shucai', image: '', order_count: 85, rating: 96 },
+        { id: 3, name: '燕麦水果酸奶杯', price: 16, category: 'tianpin', image: '', order_count: 200, rating: 99 },
+        { id: 4, name: '鲜虾粥', price: 20, category: 'wucan', image: '', order_count: 150, rating: 97 },
+        { id: 5, name: '豆浆油条套餐', price: 12, category: 'zaocan', image: '', order_count: 300, rating: 95 },
+        { id: 6, name: '番茄牛肉饭', price: 28, category: 'wucan', image: '', order_count: 180, rating: 98 },
+        { id: 7, name: '宫保鸡丁套餐', price: 26, category: 'huncai', image: '', order_count: 220, rating: 97 },
+        { id: 8, name: '香煎三文鱼沙拉', price: 30, category: 'shucai', image: '', order_count: 90, rating: 99 }
+      ])
     } finally {
       setRefreshing(false)
     }
@@ -108,139 +136,168 @@ const OrderScreen = () => {
 
   useEffect(() => {
     if (isLogin) {
-      loadChefs()
+      loadDishes()
     }
-  }, [loadChefs, isLogin])
+  }, [loadDishes, isLogin])
 
-  const goToBlindBox = () => {
-    Taro.navigateTo({ url: '/mallPackage/pages/blindBox/index' })
+  const getItemCount = (dishId: number) => {
+    const item = items.find(i => i.dish_id === dishId)
+    return item ? item.quantity : 0
   }
 
-  const goToChefDetail = (chef: Chef) => {
-    Taro.navigateTo({
-      url: `/chefPackage/pages/chefDetail/index?chefId=${chef.id}&chefName=${encodeURIComponent(chef.name)}&chefAvatar=${encodeURIComponent(chef.avatar || '')}`
+  const goToOrderConfirm = () => {
+    if (totalCount === 0) {
+      Taro.showToast({ title: '请先选择菜品', icon: 'none' })
+      return
+    }
+    Taro.navigateTo({ url: '/orderPackage/pages/orderConfirm/index' })
+  }
+
+  const handleAddDish = (dish: Dish) => {
+    addItem({
+      dish_id: dish.id,
+      name: dish.name,
+      price: dish.price,
+      quantity: 1,
+      image: getDishImage(dish),
+      category: dish.category
+    }, currentChef?.id || 0, {
+      name: currentChef?.nickname || currentChef?.username || '大厨',
+      avatar: currentChef?.avatar
     })
   }
 
-  const filteredChefs = chefs.filter((chef) => {
-    if (!searchText.trim()) return true
-    const keyword = searchText.trim().toLowerCase()
-    return chef.name.toLowerCase().includes(keyword) || chef.specialty.toLowerCase().includes(keyword)
-  })
+  const handleRemoveDish = (dishId: number) => {
+    removeItem(dishId)
+  }
+
+  const filteredDishes = dishes.filter((dish) => (
+    activeCategory === 'all' || dish.category === activeCategory
+  ))
+
+  const groupedDishes = activeCategory === 'all'
+    ? categories
+        .filter(cat => cat.id !== 'all')
+        .map(cat => ({
+          category: cat,
+          dishes: dishes.filter(dish => dish.category === cat.id)
+        }))
+        .filter(group => group.dishes.length > 0)
+    : [{
+        category: categories.find(cat => cat.id === activeCategory) || categories[0],
+        dishes: filteredDishes
+      }]
+
+  const getDishImage = (dish: Dish) => {
+    return dish.image || localDishImages[dish.id] || zaocanIcon
+  }
 
   return (
     <View className="order-container">
-      {/* 顶部搜索栏 */}
-      <View className="header">
-        <View className="search-bar">
-          <Text className="search-icon">🔍</Text>
-          <input
-            type="text"
-            placeholder={T.search}
-            value={searchText}
-            onChange={(e) => setSearchText((e.target as HTMLInputElement).value)}
-            className="search-input"
-          />
-        </View>
-        <View className="cart-icon-btn">
-          <Text className="cart-icon">🛒</Text>
-          {totalCount > 0 && (
-            <View className="badge">
-              <Text className="badge-text">{totalCount > 99 ? '99+' : totalCount}</Text>
-            </View>
-          )}
-        </View>
+      <View className="order-top">
+        <View className="hero-card" />
       </View>
 
-      <ScrollView className="scroll-content" scrollY>
-        {/* 盲盒区域 */}
-        <View className="blind-box-section">
-          <View className="blind-box-card" onClick={goToBlindBox}>
-            <View className="blind-box-left">
-              <View className="blind-box-title-large">
-                <Text className="blind-box-title-text">{T.blindBoxTitle}</Text>
-                <Text className="sparkle-icon">✨</Text>
-              </View>
-              <View className="gift-box">
-                <Text className="gift-icon">🎁</Text>
-                <Text className="question-mark">?</Text>
-              </View>
-            </View>
-            <View className="blind-box-right">
-              <Text className="blind-box-sub">{T.blindBoxSub}</Text>
-              <Text className="blind-box-tip">{T.blindBoxTip}</Text>
-              <Text className="blind-box-tip2">{T.blindBoxTip2}</Text>
-              <View className="draw-btn" onClick={goToBlindBox}>
-                <Text className="draw-btn-text">{T.draw}</Text>
-                <Text className="finger-icon">👆</Text>
-              </View>
-            </View>
-          </View>
-        </View>
+      <View className="notice-row">
+        <Text className="notice-location">♡ {T.location}</Text>
+      </View>
 
-        {/* 大厨列表 */}
-        <View className="chefs-section">
-          {filteredChefs.map((chef) => (
-            <View key={chef.id} className="chef-card" onClick={() => goToChefDetail(chef)}>
-              {/* 大厨头部信息 */}
-              <View className="chef-header">
-                {chef.avatar ? (
-                  <Image src={chef.avatar} className="chef-avatar" mode="aspectFill" />
-                ) : (
-                  <View className="chef-avatar chef-avatar-placeholder">
-                    <Text className="chef-icon">👨‍🍳</Text>
-                  </View>
-                )}
-                <View className="chef-info">
-                  <Text className="chef-name">{chef.name}</Text>
-                  <View className="rating-row">
-                    <Text className="star-icon">⭐</Text>
-                    <Text className="rating-text">{chef.rating.toFixed(1)}</Text>
-                    <Text className="dish-count">{chef.dish_count}个菜品</Text>
-                  </View>
-                </View>
-                <View className="enter-btn">
-                  <Text className="enter-btn-text">{T.enter}</Text>
-                  <Text className="arrow-icon">›</Text>
-                </View>
-              </View>
-
-              {/* 常点菜品 */}
-              {chef.top_dishes.length > 0 && (
-                <View className="top-dishes-section">
-                  <View className="section-header">
-                    <Text className="section-icon">🍱</Text>
-                    <Text className="section-title">{T.topDishes}</Text>
-                  </View>
-                  <View className="dishes-list">
-                    {chef.top_dishes.slice(0, 2).map((dish) => (
-                      <View key={dish.id} className="dish-item">
-                        <View className="dish-image-wrapper">
-                          {dish.image ? (
-                            <Image src={dish.image} className="dish-image" mode="aspectFill" />
-                          ) : (
-                            <View className="dish-image-placeholder">
-                              <Text className="dish-icon">🍱</Text>
-                            </View>
-                          )}
-                        </View>
-                        <View className="dish-info">
-                          <View className="dish-name-row">
-                            <Text className="dish-name">{dish.name}</Text>
-                          </View>
-                          <View className="dish-price-row">
-                            <Text className="dish-price">¥{dish.price}</Text>
-                          </View>
-                        </View>
-                      </View>
-                    ))}
-                  </View>
-                </View>
+      <View className="main-content">
+        <View className="category-sidebar">
+          {categories.map((cat) => (
+            <View
+              key={cat.id}
+              className={`category-item ${activeCategory === cat.id ? 'active' : ''}`}
+              onClick={() => setActiveCategory(cat.id)}
+            >
+              {cat.icon ? (
+                <Image className="category-icon-img" src={cat.icon} mode="aspectFit" />
+              ) : (
+                <Text className="category-grid-icon">▦</Text>
               )}
+              <Text className="category-name">{cat.name}</Text>
             </View>
           ))}
         </View>
-      </ScrollView>
+
+        <View className="dish-panel">
+          <ScrollView className="dish-scroll" scrollY>
+            <View className="dish-board">
+              {refreshing && dishes.length === 0 ? (
+                <View className="no-dishes">
+                  <Text className="no-dishes-text">加载中...</Text>
+                </View>
+              ) : groupedDishes.length === 0 || groupedDishes.every(group => group.dishes.length === 0) ? (
+                <View className="no-dishes">
+                  <Text className="no-dishes-text">{T.noDishes}</Text>
+                </View>
+              ) : (
+                groupedDishes.map(group => (
+                  <View className="dish-group" key={group.category.id}>
+                    <View className="group-title-row">
+                      <Text className="group-title-mark">!</Text>
+                      <Text className="group-title">{group.category.name}</Text>
+                      <Text className="group-subtitle">营养均衡，能量满满</Text>
+                      <Text className="group-decor">💪</Text>
+                    </View>
+                    {group.dishes.map((dish) => {
+                      const count = getItemCount(dish.id)
+                      return (
+                        <View key={dish.id} className="dish-card">
+                          <Image src={getDishImage(dish)} className="dish-image" mode="aspectFill" />
+                          <View className="dish-info">
+                            <View className="dish-name-row">
+                              <Text className="dish-name">{dish.name}</Text>
+                              <Text className="favorite-icon">♡</Text>
+                            </View>
+                            <Text className="dish-desc">经典搭配，香气满满</Text>
+                            <View className="dish-bottom-row">
+                              <Text className="dish-price">{dish.price} 爱心币</Text>
+                              <View className="dish-actions">
+                                {count > 0 && (
+                                  <>
+                                    <View className="action-btn minus" onClick={() => handleRemoveDish(dish.id)}>
+                                      <Text className="action-icon">−</Text>
+                                    </View>
+                                    <Text className="dish-count">{count}</Text>
+                                  </>
+                                )}
+                                <View className="action-btn plus" onClick={() => handleAddDish(dish)}>
+                                  <Text className="action-icon">+</Text>
+                                </View>
+                              </View>
+                            </View>
+                          </View>
+                        </View>
+                      )
+                    })}
+                  </View>
+                ))
+              )}
+            </View>
+          </ScrollView>
+        </View>
+      </View>
+
+      {totalCount > 0 ? (
+        <View className="cart-bar">
+          <View className="cart-icon-wrap">
+            <Image className="cart-icon" src={orderCarIcon} mode="aspectFit" />
+            <Text className="cart-badge">{totalCount}</Text>
+          </View>
+          <View className="cart-info">
+            <Text className="cart-selected">已选商品 {totalCount} 件</Text>
+            <Text className="cart-total">{T.total}：{totalPrice.toFixed(0)} 爱心币</Text>
+          </View>
+          <View className="cart-btn" onClick={goToOrderConfirm}>
+            <Text className="cart-btn-text">{T.goOrder}</Text>
+          </View>
+        </View>
+      ) : (
+        <View className="cart-empty-tip">
+          <Image className="cart-icon" src={orderCarIcon} mode="aspectFit" />
+        </View>
+      )}
 
       <CustomTabBar />
     </View>
