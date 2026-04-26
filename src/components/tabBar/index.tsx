@@ -1,29 +1,31 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { View, Text, Image } from '@tarojs/components'
-import Taro, { useRouter } from '@tarojs/taro'
+import Taro, { useRouter, useDidShow, useDidHide } from '@tarojs/taro'
 import { useUser } from '../../context/UserContext'
 import api from '../../utils/api'
 import { pickData, asNumber } from '../../utils/response'
-import dachu from '../../assets/dachu.png'
-import manghe from '../../assets/manghe.png'
-import jizhang from '../../assets/jizhang.png'
-import homeIcon from '../../assets/homeIcon.png'
+import homeIcon from '../../assets/homeIcon.jpg'
+import diandanIcon from '../../assets/diandan.jpg'
+import myIcon from '../../assets/my.jpg'
+import shangchengIcon from '../../assets/sahngcheng.jpg'
+import planIcon from '../../assets/plan.jpg'
 import './index.scss'
 
+// 根据图片顺序：首页、任务、点餐、商城、我的
 const foodieTabs = [
-  { pagePath: '/pages/order/index', text: '点餐', iconPath: dachu, selectedIconPath: dachu },
-  { pagePath: '/pages/orders/index', text: '订单', iconPath: dachu, selectedIconPath: dachu, badge: true },
-  { pagePath: '/pages/mall/index', text: '商城', iconPath: manghe, selectedIconPath: manghe },
-  { pagePath: '/pages/expense/index', text: '记账', iconPath: jizhang, selectedIconPath: jizhang },
-  { pagePath: '/pages/family/index', text: '我的', iconPath: homeIcon, selectedIconPath: homeIcon }
+  { pagePath: '/pages/home/index', text: '首页', iconPath: homeIcon, selectedIconPath: homeIcon },
+  { pagePath: '/pages/orders/index', text: '任务', iconPath: planIcon, selectedIconPath: planIcon, badge: true },
+  { pagePath: '/pages/order/index', text: '点餐', iconPath: diandanIcon, selectedIconPath: diandanIcon, isCenter: true },
+  { pagePath: '/pages/mall/index', text: '商城', iconPath: shangchengIcon, selectedIconPath: shangchengIcon },
+  { pagePath: '/pages/family/index', text: '我的', iconPath: myIcon, selectedIconPath: myIcon }
 ]
 
 const chefTabs = [
-  { pagePath: '/pages/recipe/index', text: '菜谱', iconPath: dachu, selectedIconPath: dachu },
-  { pagePath: '/pages/orders/index', text: '订单', iconPath: dachu, selectedIconPath: dachu, badge: true },
-  { pagePath: '/pages/mall/index', text: '商城', iconPath: manghe, selectedIconPath: manghe },
-  { pagePath: '/pages/expense/index', text: '记账', iconPath: jizhang, selectedIconPath: jizhang },
-  { pagePath: '/pages/family/index', text: '我的', iconPath: homeIcon, selectedIconPath: homeIcon }
+  { pagePath: '/pages/home/index', text: '首页', iconPath: homeIcon, selectedIconPath: homeIcon },
+  { pagePath: '/pages/orders/index', text: '任务', iconPath: planIcon, selectedIconPath: planIcon, badge: true },
+  { pagePath: '/recipePackage/pages/recipe/index', text: '菜品', iconPath: diandanIcon, selectedIconPath: diandanIcon, isCenter: true },
+  { pagePath: '/pages/mall/index', text: '商城', iconPath: shangchengIcon, selectedIconPath: shangchengIcon },
+  { pagePath: '/pages/family/index', text: '我的', iconPath: myIcon, selectedIconPath: myIcon }
 ]
 
 // 判断当前环境
@@ -34,6 +36,8 @@ const CustomTabBar = () => {
   const [orderBadge, setOrderBadge] = useState(0)
   const { user, isLogin } = useUser()
   const router = useRouter()
+  const pollingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const pageVisibleRef = useRef(false)
 
   // 根据用户角色选择对应的 tabs
   const isChef = user?.role === 'chef'
@@ -68,6 +72,10 @@ const CustomTabBar = () => {
   }, [tabs, router.path])
 
   const loadUnreadCount = useCallback(async () => {
+    if (!pageVisibleRef.current) {
+      return
+    }
+
     if (!isLogin) {
       setOrderBadge(0)
       return
@@ -76,17 +84,46 @@ const CustomTabBar = () => {
     try {
       const result = await api.order.unreadCount()
       const data = pickData<any>(result, {})
+      if (!pageVisibleRef.current) {
+        return
+      }
       setOrderBadge(asNumber(data?.count, 0))
     } catch (error) {
       console.error('加载未读订单数量失败:', error)
     }
   }, [isLogin])
 
-  useEffect(() => {
+  const stopPolling = useCallback(() => {
+    if (pollingTimerRef.current) {
+      clearInterval(pollingTimerRef.current)
+      pollingTimerRef.current = null
+    }
+  }, [])
+
+  const startPolling = useCallback(() => {
+    stopPolling()
     loadUnreadCount()
-    const interval = setInterval(loadUnreadCount, 30000)
-    return () => clearInterval(interval)
-  }, [loadUnreadCount])
+    pollingTimerRef.current = setInterval(() => {
+      void loadUnreadCount()
+    }, 30000)
+  }, [loadUnreadCount, stopPolling])
+
+  useDidShow(() => {
+    pageVisibleRef.current = true
+    startPolling()
+  })
+
+  useDidHide(() => {
+    pageVisibleRef.current = false
+    stopPolling()
+  })
+
+  useEffect(() => {
+    return () => {
+      pageVisibleRef.current = false
+      stopPolling()
+    }
+  }, [stopPolling])
 
   const handleClick = (index: number) => {
     const item = tabs[index]
@@ -112,13 +149,13 @@ const CustomTabBar = () => {
       {tabs.map((item, index) => (
         <View
           key={index}
-          className={`tab-item ${index === activeIndex ? 'active' : ''}`}
+          className={`tab-item ${index === activeIndex ? 'active' : ''} ${item.isCenter ? 'center-item' : ''}`}
           onClick={() => handleClick(index)}
         >
-          <View className='tab-icon-wrap'>
+          <View className={`tab-icon-wrap ${item.isCenter ? 'center-icon-wrap' : ''}`}>
             <Image
               src={index === activeIndex ? item.selectedIconPath : item.iconPath}
-              className='tab-icon'
+              className={`tab-icon ${item.isCenter ? 'center-icon' : ''}`}
               mode='aspectFit'
             />
             {item.badge && orderBadge > 0 && (
@@ -127,7 +164,7 @@ const CustomTabBar = () => {
               </View>
             )}
           </View>
-          <Text className='tab-text'>{item.text}</Text>
+          <Text className={`tab-text ${item.isCenter ? 'center-text' : ''}`}>{item.text}</Text>
         </View>
       ))}
     </View>

@@ -1,0 +1,268 @@
+.blind-box-container {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: linear-gradient(180deg, #F56F84 0%, #FFE4EC 100%);
+}
+
+.header {
+  padding: 44px 16px 20px;
+  text-align: center;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.main-content {
+  padding: 0 24px;
+}
+
+.box-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.box-container {
+  width: 240px;
+  height: 240px;
+  background-color: #FFFFFF;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.box-container.drawing {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.box-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.box-icon {
+  font-size: 64px;
+  margin-bottom: 12px;
+}
+
+.box-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2B1D23;
+  margin-bottom: 4px;
+}
+
+.box-subtitle {
+  font-size: 14px;
+  color: #8B6B73;
+}
+
+.drawing-animation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.drawing-icon {
+  font-size: 48px;
+  animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.drawing-text {
+  font-size: 16px;
+  color: #D9465F;
+  margin-top: 12px;
+}
+
+.info-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.info-text {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 8px;
+}
+
+.count-text {
+  font-size: 16px;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.price-section {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  margin-bottom: 32px;
+}
+
+.price-symbol {
+  font-size: 28px;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.price-number {
+  font-size: 64px;
+  color: #FFFFFF;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.price-label {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-left: 8px;
+}
+
+.draw-btn {
+  width: 100%;
+  padding: 16px;
+  background-color: #FFFFFF;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.draw-btn.disabled {
+  background-color: #F0F0F0;
+  opacity: 0.5;
+}
+
+.draw-btn-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #D9465F;
+}
+
+.result-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 1000;
+}
+
+.result-modal {
+  width: 100%;
+  background-color: #FFFFFF;
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.result-header {
+  background: linear-gradient(135deg, #D9465F 0%, #F56F84 100%);
+  padding: 24px;
+  text-align: center;
+}
+
+.result-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.result-content {
+  padding: 24px;
+  text-align: center;
+}
+
+.result-image-wrapper {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 16px;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: #FCEFF5;
+}
+
+.result-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.result-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-icon {
+  font-size: 48px;
+}
+
+.result-dish-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2B1D23;
+  margin-bottom: 8px;
+}
+
+.result-dish-price {
+  font-size: 16px;
+  color: #D9465F;
+}
+
+.result-actions {
+  display: flex;
+  gap: 12px;
+  padding: 0 24px 24px;
+}
+
+.result-btn-secondary {
+  flex: 1;
+  padding: 14px;
+  background-color: #F5F5F5;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.result-btn-primary {
+  flex: 1;
+  padding: 14px;
+  background-color: #D9465F;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.result-btn-text {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.result-btn-secondary .result-btn-text {
+  color: #666;
+}
+
+.result-btn-primary .result-btn-text {
+  color: #FFFFFF;
+}

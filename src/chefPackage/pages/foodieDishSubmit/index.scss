@@ -1,0 +1,430 @@
+.foodie-dish-submit-container {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: linear-gradient(180deg, #FFE4EC 0%, #FFF5F7 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+// 头部
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background-color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+}
+
+// 滚动内容�
+.scroll-content {
+  flex: 1;
+  padding: 16px;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// 表单�
+.form-group {
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.form-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+  display: block;
+
+  &.required::after {
+    content: '*';
+    color: #FF6B6B;
+    margin-left: 4px;
+  }
+}
+
+.form-input {
+  width: 100%;
+  height: 44px;
+  background-color: #F8F9FA;
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: 15px;
+  color: #333;
+  border: none;
+  outline: none;
+
+  &::placeholder {
+    color: #999;
+  }
+}
+
+.form-textarea {
+  width: 100%;
+  height: 100px;
+  background-color: #F8F9FA;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 15px;
+  color: #333;
+  border: none;
+  outline: none;
+  line-height: 1.5;
+
+  &::placeholder {
+    color: #999;
+  }
+}
+
+.char-count {
+  text-align: right;
+  font-size: 12px;
+  color: #999;
+  margin-top: 8px;
+}
+
+// 大厨选择�
+.chef-selector-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: #F8F9FA;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:active {
+    background-color: #F0F0F0;
+  }
+}
+
+.selected-chef {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.selected-chef-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+
+  &.placeholder {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.chef-icon {
+  font-size: 20px;
+}
+
+.selected-chef-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.placeholder-text {
+  font-size: 15px;
+  color: #999;
+}
+
+.arrow-icon {
+  font-size: 20px;
+  color: #999;
+}
+
+// 图片上传
+.image-upload-section {
+  display: flex;
+  justify-content: center;
+}
+
+.upload-placeholder {
+  width: 200px;
+  height: 200px;
+  background-color: #F8F9FA;
+  border-radius: 16px;
+  border: 2px dashed #DDD;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:active {
+    background-color: #F0F0F0;
+    border-color: #FF6B6B;
+  }
+
+  &.uploading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+.upload-icon {
+  font-size: 48px;
+}
+
+.upload-text {
+  font-size: 14px;
+  color: #999;
+}
+
+.image-preview-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+  cursor: pointer;
+
+  &:hover,
+  &:active {
+    opacity: 1;
+  }
+}
+
+.overlay-text {
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+// 价格输入
+.price-input-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: #F8F9FA;
+  border-radius: 12px;
+  padding: 0 16px;
+}
+
+.currency {
+  font-size: 18px;
+  font-weight: 700;
+  color: #FF6B6B;
+  margin-right: 8px;
+}
+
+.price-input {
+  flex: 1;
+  background-color: transparent;
+  padding: 0;
+}
+
+// 底部按钮�
+.bottom-bar {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background-color: #FFFFFF;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  gap: 12px;
+}
+
+.btn-secondary {
+  flex: 1;
+  height: 48px;
+  background-color: #F5F5F5;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:active {
+    background-color: #E8E8E8;
+  }
+}
+
+.btn-primary {
+  flex: 2;
+  height: 48px;
+  background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:active {
+    opacity: 0.9;
+  }
+
+  &.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+.btn-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: #FFFFFF;
+
+  .btn-secondary & {
+    color: #666;
+  }
+}
+
+// 弹窗
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #FFFFFF;
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid #F5F5F5;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+}
+
+.modal-close {
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.chef-list {
+  max-height: 50vh;
+  padding: 8px;
+}
+
+.chef-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:active {
+    background-color: #F8F9FA;
+  }
+
+  &.selected {
+    background-color: #FFF0F0;
+  }
+}
+
+.chef-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 16px;
+
+  &.placeholder {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.chef-info {
+  flex: 1;
+}
+
+.chef-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.check-icon {
+  font-size: 20px;
+  color: #FF6B6B;
+  font-weight: 700;
+}
+
+// 空状�
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.empty-text {
+  font-size: 14px;
+  color: #999;
+}
+
+// H5 适配
+@media screen and (min-width: 768px) {
+  .foodie-dish-submit-container {
+    max-width: var(--h5-page-max-width);
+    margin: 0 auto;
+  }
+}

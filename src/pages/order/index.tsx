@@ -1,4 +1,4 @@
-﻿﻿import { useState, useEffect, useCallback } from 'react'
+﻿import { useState, useEffect, useCallback } from 'react'
 import { View, Text, ScrollView, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import api from '../../utils/api'
@@ -17,7 +17,7 @@ const T = {
   draw: '抽一个',
   enter: '进入点餐',
   noDishes: '暂无菜品',
-  topDishes: '常点菜品',
+  topDishes: '推荐菜品',
   viewAll: '查看全部',
   monthSales: '月售',
   rating: '好评率'
@@ -113,12 +113,12 @@ const OrderScreen = () => {
   }, [loadChefs, isLogin])
 
   const goToBlindBox = () => {
-    Taro.navigateTo({ url: '/pages/blindBox/index' })
+    Taro.navigateTo({ url: '/mallPackage/pages/blindBox/index' })
   }
 
   const goToChefDetail = (chef: Chef) => {
     Taro.navigateTo({
-      url: `/pages/chefDetail/index?chefId=${chef.id}&chefName=${encodeURIComponent(chef.name)}&chefAvatar=${encodeURIComponent(chef.avatar || '')}`
+      url: `/chefPackage/pages/chefDetail/index?chefId=${chef.id}&chefName=${encodeURIComponent(chef.name)}&chefAvatar=${encodeURIComponent(chef.avatar || '')}`
     })
   }
 
@@ -182,26 +182,23 @@ const OrderScreen = () => {
         <View className="chefs-section">
           {filteredChefs.map((chef) => (
             <View key={chef.id} className="chef-card" onClick={() => goToChefDetail(chef)}>
-              <View className="chef-main">
-                <View className="chef-header">
-                  {chef.avatar ? (
-                    <Image src={chef.avatar} className="chef-avatar" mode="aspectFill" />
-                  ) : (
-                    <View className="chef-avatar chef-avatar-placeholder">
-                      <Text className="chef-icon">👨‍🍳</Text>
-                    </View>
-                  )}
-                  <View className="chef-info">
-                    <Text className="chef-name">{chef.name}</Text>
-                    <View className="rating-row">
-                      <Text className="star-icon">⭐</Text>
-                      <Text className="rating-text">{chef.rating.toFixed(1)}</Text>
-                      <Text className="dot">·</Text>
-                      <Text className="dish-count">{chef.dish_count}个</Text>
-                    </View>
+              {/* 大厨头部信息 */}
+              <View className="chef-header">
+                {chef.avatar ? (
+                  <Image src={chef.avatar} className="chef-avatar" mode="aspectFill" />
+                ) : (
+                  <View className="chef-avatar chef-avatar-placeholder">
+                    <Text className="chef-icon">👨‍🍳</Text>
+                  </View>
+                )}
+                <View className="chef-info">
+                  <Text className="chef-name">{chef.name}</Text>
+                  <View className="rating-row">
+                    <Text className="star-icon">⭐</Text>
+                    <Text className="rating-text">{chef.rating.toFixed(1)}</Text>
+                    <Text className="dish-count">{chef.dish_count}个菜品</Text>
                   </View>
                 </View>
-                <Text className="specialty-text">{chef.specialty}</Text>
                 <View className="enter-btn">
                   <Text className="enter-btn-text">{T.enter}</Text>
                   <Text className="arrow-icon">›</Text>
@@ -209,15 +206,14 @@ const OrderScreen = () => {
               </View>
 
               {/* 常点菜品 */}
-              <View className="top-dishes-section">
-                <View className="section-header">
-                  <Text className="section-icon">🍱</Text>
-                  <Text className="section-title">{T.topDishes}</Text>
-                  <Text className="view-all">{T.viewAll} ›</Text>
-                </View>
-                <View className="dishes-list">
-                  {chef.top_dishes.length > 0 ? (
-                    chef.top_dishes.slice(0, 2).map((dish) => (
+              {chef.top_dishes.length > 0 && (
+                <View className="top-dishes-section">
+                  <View className="section-header">
+                    <Text className="section-icon">🍱</Text>
+                    <Text className="section-title">{T.topDishes}</Text>
+                  </View>
+                  <View className="dishes-list">
+                    {chef.top_dishes.slice(0, 2).map((dish) => (
                       <View key={dish.id} className="dish-item">
                         <View className="dish-image-wrapper">
                           {dish.image ? (
@@ -231,28 +227,16 @@ const OrderScreen = () => {
                         <View className="dish-info">
                           <View className="dish-name-row">
                             <Text className="dish-name">{dish.name}</Text>
-                            <Text className="recommend-tag">推荐</Text>
-                          </View>
-                          <View className="dish-stats">
-                            <Text className="dish-sales">{T.monthSales} {dish.order_count || 128}</Text>
-                            <Text className="dish-rating">{T.rating} {dish.rating || 98}%</Text>
                           </View>
                           <View className="dish-price-row">
                             <Text className="dish-price">¥{dish.price}</Text>
-                            <View className="add-btn">
-                              <Text className="add-icon">+</Text>
-                            </View>
                           </View>
                         </View>
                       </View>
-                    ))
-                  ) : (
-                    <View className="no-dishes">
-                      <Text className="no-dishes-text">{T.noDishes}</Text>
-                    </View>
-                  )}
+                    ))}
+                  </View>
                 </View>
-              </View>
+              )}
             </View>
           ))}
         </View>

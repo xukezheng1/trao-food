@@ -5,7 +5,9 @@
   background-color: #FFFFFF;
   display: flex;
   width: 100%;
-  align-items: center;
+  left: 0;
+  right: 0;
+  align-items: flex-end;
   justify-content: space-around;
   border-radius: 24rpx;
   box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
@@ -18,9 +20,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 8rpx 0;
+  justify-content: flex-end;
+  padding: 8rpx 0 16rpx;
   transition: all 0.3s;
+  height: 100%;
+}
+
+// 中间凸起按钮样式
+.tab-item.center-item {
+  position: relative;
+  padding-bottom: 8rpx;
 }
 
 .tab-icon-wrap {
@@ -28,20 +37,43 @@
   margin-bottom: 4rpx;
 }
 
+// 中间按钮图标容器
+.tab-icon-wrap.center-icon-wrap {
+  margin-bottom: 0;
+}
+
 .tab-icon {
-  width: 48rpx;
-  height: 48rpx;
+  width: 58rpx;
+  height: 58rpx;
   opacity: 0.62;
+}
+
+// 中间按钮图标
+.tab-icon.center-icon {
+  width: 120rpx;
+  height: 120rpx;
+  opacity: 1;
+  border-radius: 50%;
+  box-shadow: 0 8rpx 24rpx rgba(234, 76, 115, 0.35);
 }
 
 .tab-item.active .tab-icon {
   opacity: 1;
-  transform: scale(1.15);
+}
+
+// 中间按钮active状态不放大
+.tab-item.active .tab-icon.center-icon {
+  transform: none;
 }
 
 .tab-text {
   font-size: 22rpx;
   color: #8C8C8C;
+}
+
+// 中间按钮文字
+.tab-text.center-text {
+  margin-top: 8rpx;
 }
 
 .tab-item.active .tab-text {
@@ -68,4 +100,14 @@
   color: #FFFFFF;
   font-size: 20rpx;
   font-weight: 700;
+}
+
+@media screen and (min-width: 768px) {
+  .custom-tab-bar {
+    left: 50%;
+    right: auto;
+    width: calc(var(--h5-page-max-width) - (var(--h5-page-gutter) * 2));
+    max-width: calc(100vw - (var(--h5-page-gutter) * 2));
+    transform: translateX(-50%);
+  }
 }

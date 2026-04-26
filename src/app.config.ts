@@ -2,27 +2,51 @@ const isH5 = process.env.TARO_ENV === 'h5'
 
 export default {
   pages: [
+        'pages/home/index',
     'pages/order/index',
     'pages/login/index',
     'pages/register/index',
-    'pages/home/index',
+    'pages/family/index',
     'pages/orders/index',
     'pages/mall/index',
-    'pages/expense/index',
-    'pages/family/index',
-    'pages/recipe/index',
-    'pages/recipeDetail/index',
-    'pages/blindBox/index',
-    'pages/chefDetail/index',
-    'pages/orderConfirm/index',
-    'pages/orderDetail/index',
-    'pages/orderList/index',
-    'pages/chefOrders/index',
-    'pages/billStats/index',
-    'pages/homeRecipe/index',
-    'pages/aiRecipe/index',
-    'pages/productPublish/index',
-    'pages/chefSubmission/index'
+    'pages/expense/index'
+  ],
+  subpackages: [
+    {
+      root: 'orderPackage',
+      pages: [
+        'pages/orderConfirm/index',
+        'pages/orderDetail/index',
+        'pages/orderList/index',
+        'pages/billStats/index'
+      ]
+    },
+    {
+      root: 'chefPackage',
+      pages: [
+        'pages/chefDetail/index',
+        'pages/chefSubmission/index',
+        'pages/foodieDishSubmit/index',
+        'pages/chefOrders/index'
+      ]
+    },
+    {
+      root: 'recipePackage',
+      pages: [
+        'pages/recipe/index',
+        'pages/recipeDetail/index',
+        'pages/homeRecipe/index',
+        'pages/aiRecipe/index'
+      ]
+    },
+    {
+      root: 'mallPackage',
+      pages: [
+        'pages/productPublish/index',
+        'pages/blindBox/index',
+        'pages/bindRelation/index'
+      ]
+    }
   ],
   window: {
     backgroundTextStyle: 'dark',
@@ -30,10 +54,10 @@ export default {
     navigationBarTitleText: '美食生活',
     navigationBarBackgroundColor: '#FFF2F6',
     backgroundColor: '#FFF2F6',
+    baseUrl: 'http://8.135.32.152/api'
   },
   usingComponents: {},
-  subpackages: [],
-  entryPagePath: 'pages/order/index',
+  entryPagePath: 'pages/home/index',
   // H5 环境不配置 tabBar，使用自定义 TabBar 组件
   // 小程序环境使用自定义 tabBar
   ...(isH5 ? {} : {
@@ -44,35 +68,41 @@ export default {
       backgroundColor: '#FFFFFF',
       borderStyle: 'white',
       list: [
+                {
+          pagePath: 'pages/home/index',
+          text: '首页',
+          iconPath: 'assets/homeIcon.jpg',
+          selectedIconPath: 'assets/homeIcon.jpg'
+        },
         {
           pagePath: 'pages/order/index',
-          text: '点餐',
-          iconPath: 'assets/dachu.png',
-          selectedIconPath: 'assets/dachu.png'
+          text: '首页',
+          iconPath: 'assets/homeIcon.jpg',
+          selectedIconPath: 'assets/homeIcon.jpg'
         },
         {
           pagePath: 'pages/orders/index',
-          text: '订单',
-          iconPath: 'assets/dachu.png',
-          selectedIconPath: 'assets/dachu.png'
+          text: '任务',
+          iconPath: 'assets/plan.jpg',
+          selectedIconPath: 'assets/plan.jpg'
         },
         {
           pagePath: 'pages/mall/index',
-          text: '商城',
-          iconPath: 'assets/manghe.png',
-          selectedIconPath: 'assets/manghe.png'
-        },
-        {
-          pagePath: 'pages/expense/index',
-          text: '记账',
-          iconPath: 'assets/jizhang.png',
-          selectedIconPath: 'assets/jizhang.png'
+          text: '点餐',
+          iconPath: 'assets/diandan.jpg',
+          selectedIconPath: 'assets/diandan.jpg'
         },
         {
           pagePath: 'pages/family/index',
+          text: '商城',
+          iconPath: 'assets/sahngcheng.jpg',
+          selectedIconPath: 'assets/sahngcheng.jpg'
+        },
+        {
+          pagePath: 'pages/login/index',
           text: '我的',
-          iconPath: 'assets/homeIcon.png',
-          selectedIconPath: 'assets/homeIcon.png'
+          iconPath: 'assets/my.jpg',
+          selectedIconPath: 'assets/my.jpg'
         }
       ]
     }

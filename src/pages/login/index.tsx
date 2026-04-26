@@ -161,13 +161,6 @@ const AuthScreen = () => {
             <Text className="btn-text">{loading ? T.loading : T.login}</Text>
             <Text className="btn-arrow">→</Text>
           </Button>
-
-          <View className="other-login">
-            <View className="divider"></View>
-            <Text className="divider-text">{T.otherLogin}</Text>
-            <View className="divider"></View>
-          </View>
-
           <View className="social-login">
             <Button className="social-btn wechat" onClick={() => Taro.showToast({ title: '微信登录开发中', icon: 'none' })}>
               <Image src={require('../../assets/wechat.png')} className="social-icon-image" mode="aspectFit" />

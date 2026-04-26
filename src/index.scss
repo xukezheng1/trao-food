@@ -2,10 +2,8 @@
 
 page {
   background-color: #FFF2F6;
+    box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-*{
-  box-sizing: border-box;
 }
 .container {
   min-height: 100vh;
@@ -152,4 +150,51 @@ page {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+}
+
+:root {
+  --h5-page-max-width: 680px;
+  --h5-page-gutter: 16px;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background-color: #FFF2F6;
+}
+
+.taro_page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+.taro_page > .container,
+.taro_page > [class$='-container'] {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+@media screen and (min-width: 768px) {
+  .taro_page > .container,
+  .taro_page > [class$='-container'] {
+    max-width: var(--h5-page-max-width);
+    margin: 0 auto;
+  }
+
+  .taro_page .bottom-bar {
+    left: 50% !important;
+    right: auto !important;
+    width: calc(var(--h5-page-max-width) - (var(--h5-page-gutter) * 2));
+    max-width: calc(100vw - (var(--h5-page-gutter) * 2));
+    transform: translateX(-50%);
+  }
 }

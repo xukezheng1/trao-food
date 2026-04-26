@@ -4,6 +4,7 @@ import Taro from '@tarojs/taro'
 import api from '../../utils/api'
 import { asNumber, pickList } from '../../utils/response'
 import { useUser } from '../../context/UserContext'
+import { chooseAndUploadImage } from '../../utils/upload'
 import CustomTabBar from '../../components/tabBar'
 import './index.scss'
 
@@ -232,9 +233,20 @@ const FamilyScreen = () => {
     <View className="family-container">
       <View className="header">
         <View className="header-left">
-          <View className="avatar-container" onClick={() => {
-            setEditNickname(user.nickname || user.username || '')
-            setProfileModalVisible(true)
+          <View className="avatar-container" onClick={async () => {
+            try {
+              const avatarUrl = await chooseAndUploadImage('avatars')
+              console.log('[Avatar] Upload success, URL:', avatarUrl)
+              const result = await api.user.updateProfile({ avatar: avatarUrl })
+              console.log('[Avatar] Update profile result:', result)
+              await fetchProfile()
+              Taro.showToast({ title: '头像更新成功', icon: 'success' })
+            } catch (error: any) {
+              // 用户取消选择图片时不显示错误
+              if (error.message?.includes('cancel')) return
+              console.error('[Avatar] Error:', error)
+              Taro.showToast({ title: error.message || '上传失败', icon: 'none' })
+            }
           }}>
             {user.avatar ? (
               <Image src={user.avatar} className="avatar-image" />
@@ -243,6 +255,9 @@ const FamilyScreen = () => {
                 <Text className="avatar-icon">👤</Text>
               </View>
             )}
+            <View className="avatar-overlay">
+              <Text className="camera-icon">📷</Text>
+            </View>
           </View>
           {isChef && (
             <View className="balance-container">
@@ -426,7 +441,16 @@ const FamilyScreen = () => {
                   <Text className="camera-icon">📷</Text>
                 </View>
               </View>
-              <Text className="change-avatar-text" onClick={() => Taro.showToast({ title: '头像上传功能开发中', icon: 'none' })}>
+              <Text className="change-avatar-text" onClick={async () => {
+                try {
+                  const avatarUrl = await chooseAndUploadImage()
+                  await api.user.updateProfile({ avatar: avatarUrl })
+                  await fetchProfile()
+                  Taro.showToast({ title: '头像更新成功', icon: 'success' })
+                } catch (error: any) {
+                  Taro.showToast({ title: error.message || T.uploadFailed, icon: 'none' })
+                }
+              }}>
                 {T.changeAvatar}
               </Text>
               <Text className="profile-username">{user.username}</Text>

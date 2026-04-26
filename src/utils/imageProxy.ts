@@ -1,6 +1,9 @@
 import { storage } from './storage'
 
-const BASE_URL = 'http://192.168.1.4:3000/api'
+// H5 开发环境使用相对路径（通过代理），生产环境和小程序使用完整 URL
+const isH5 = process.env.TARO_ENV === 'h5'
+const isDev = process.env.NODE_ENV === 'development'
+const BASE_URL = (isH5 && isDev) ? '/api' : 'http://8.135.32.152/api'
 
 /**
  * 将七牛云图片地址转换为通过API转发的地址

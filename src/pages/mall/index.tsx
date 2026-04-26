@@ -68,7 +68,7 @@ const MallScreen = () => {
   }
 
   const goToDetail = (productId: number) => {
-    Taro.navigateTo({ url: `/pages/productPublish/index?productId=${productId}` })
+    Taro.navigateTo({ url: `/mallPackage/pages/productPublish/index?productId=${productId}` })
   }
 
   const filteredProducts = products.filter((product) => {

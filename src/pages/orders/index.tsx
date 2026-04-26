@@ -154,7 +154,7 @@ const OrdersTabScreen = () => {
   }
 
   const goToDetail = (orderId: number) => {
-    Taro.navigateTo({ url: `/pages/orderDetail/index?orderId=${orderId}` })
+    Taro.navigateTo({ url: `/orderPackage/pages/orderDetail/index?orderId=${orderId}` })
   }
 
   const tabs = [

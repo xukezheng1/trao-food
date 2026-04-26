@@ -1,9 +1,10 @@
-﻿import Taro from '@tarojs/taro'
+﻿﻿import Taro from '@tarojs/taro'
 import { storage } from './storage'
 
-// H5 环境使用相对路径（通过代理），小程序使用完整 URL
+// H5 开发环境使用相对路径（通过代理），生产环境和小程序使用完整 URL
 const isH5 = process.env.TARO_ENV === 'h5'
-export const BASE_URL = isH5 ? '/api' : 'http://8.135.32.152/api'
+const isDev = process.env.NODE_ENV === 'development'
+export const BASE_URL = (isH5 && isDev) ? '/api' : 'http://8.135.32.152/api'
 
 interface ResponseData<T = any> {
   success: boolean
@@ -105,7 +106,7 @@ export const api = {
     chefs: () => request('/order/chefs'),
     dishes: (chefId: number) => request(`/order/dishes/${chefId}`),
     topDishes: (chefId: number) => request(`/order/top-dishes/${chefId}`),
-    createDish: (data: { name: string; description?: string; price: number; image?: string; category_id?: number }) =>
+    createDish: (data: { name: string; description?: string; price: number; image?: string; category_id?: number; chef_id?: number }) =>
       request('/order/dish', 'POST', data),
     updateDish: (dishId: number, data: { name?: string; description?: string; price?: number; image?: string; category_id?: number }) =>
       request(`/order/dish/${dishId}`, 'PUT', data),
